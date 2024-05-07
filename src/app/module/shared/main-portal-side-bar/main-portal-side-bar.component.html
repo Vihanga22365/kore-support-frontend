@@ -1,0 +1,44 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="vertical-menu">
+  <div data-simplebar class="h-100">
+    <!--- Sidemenu -->
+    <div id="sidebar-menu">
+      <!-- Left Menu Start -->
+      <ul metis-menu class="metismenu list-unstyled" id="side-menu">
+        <li class="menu-title">Main</li>
+
+        <li>
+          <a routerLink="/panel/dashboard" class="waves-effect">
+            <i class="mdi mdi-view-dashboard"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="javascript: void(0);" class="has-arrow waves-effect">
+            <i class="mdi mdi-message-text-outline"></i>
+            <span>Ticket Management</span>
+          </a>
+          <ul class="sub-menu" aria-expanded="false">
+            <li><a routerLink="/panel/create-ticket">Submit a Ticket</a></li>
+            <li><a routerLink="/panel/view-tickets">My Activities</a></li>
+            <!-- <li><a href="email-compose.html">Email Compose</a></li> -->
+          </ul>
+        </li>
+
+        <li>
+          <a href="javascript: void(0);" class="has-arrow waves-effect">
+            <i class="mdi mdi-account"></i>
+            <span>User Management</span>
+          </a>
+          <ul class="sub-menu" aria-expanded="false">
+            <li><a routerLink="/panel/create-user">Create User</a></li>
+            <li><a routerLink="/panel/view-users">View Users</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- Sidebar -->
+  </div>
+</div>
+<!-- Left Sidebar End -->

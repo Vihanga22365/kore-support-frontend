@@ -1,0 +1,73 @@
+<div class="container-fluid">
+  <!-- start page title -->
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="page-title-box">
+        <h4>Create User</h4>
+        <ol class="breadcrumb m-0">
+          <li class="breadcrumb-item">
+            <a routerLink="/panel/dashboard">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item active">Create User</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <app-main-portal-time-date></app-main-portal-time-date>
+    </div>
+  </div>
+  <!-- end page title -->
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Create User</h4>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="mt-4">
+                <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Submit a User Details</h5>
+                <form>
+                  <div class="mb-3">
+                    <label class="form-label" for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="Enter your first name" />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label" for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" placeholder="Enter your last name" />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label" for="emailAddress">Email</label>
+                    <input type="email" class="form-control" id="emailAddress" placeholder="Enter your email" />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label" for="phoneNumber">Phone Number</label>
+                    <input type="email" class="form-control" id="phoneNumber" placeholder="Enter your phone number" />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password" />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label" for="confirmPassword">Confirm</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Enter your password again" />
+                  </div>
+
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn-primary w-md">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- end row -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
