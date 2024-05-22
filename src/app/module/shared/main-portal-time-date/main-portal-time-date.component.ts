@@ -25,10 +25,10 @@ export class MainPortalTimeDateComponent implements OnInit {
   }
 
   private updateTime() {
-    const transformedTime = this.datePipe.transform(new Date(), 'mediumTime', '-0600');
+    const transformedTime = this.datePipe.transform(new Date(), 'mediumTime', '-0500');
     this.currentTime = transformedTime ? transformedTime : '';
 
-    const transformedDate = this.datePipe.transform(new Date(), 'fullDate', '-0600');
+    const transformedDate = this.datePipe.transform(new Date(), 'fullDate', '-0500');
     this.currentDate = transformedDate ? transformedDate : '';
   }
 }
