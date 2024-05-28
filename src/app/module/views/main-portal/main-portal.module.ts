@@ -29,6 +29,10 @@ import { CreateInstallationTypeComponent } from './full-portal/installation-type
 import { ViewInstallationTypeComponent } from './full-portal/installation-type-management/view-installation-type/view-installation-type.component';
 import { CreateAffectedEnvironmentComponent } from './full-portal/affected-environment-management/create-affected-environment/create-affected-environment.component';
 import { ViewAffectedEnvironmentComponent } from './full-portal/affected-environment-management/view-affected-environment/view-affected-environment.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -56,7 +60,7 @@ import { ViewAffectedEnvironmentComponent } from './full-portal/affected-environ
     CreateAffectedEnvironmentComponent,
     ViewAffectedEnvironmentComponent,
   ],
-  imports: [CommonModule, MetismenuAngularModule, MainPortalRoutingModule, DataTablesModule, MatChipsModule, NgxDropzoneModule],
+  imports: [CommonModule, MetismenuAngularModule, MainPortalRoutingModule, DataTablesModule, MatChipsModule, NgxDropzoneModule, ReactiveFormsModule, HttpClientModule, MatDialogModule, MatButtonModule],
   exports: [MainPortalComponent],
 })
 export class MainPortalModule {}

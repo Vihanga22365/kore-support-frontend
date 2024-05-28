@@ -27,75 +27,97 @@
             <div class="col-lg-12">
               <div class="mt-4">
                 <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Submit a Request</h5>
-                <form>
+                <form [formGroup]="ticketSubmitForm" (ngSubmit)="createTicket()">
                   <div class="mb-3">
                     <label class="form-label" for="ccEmailAddress">CC Email Addreses</label>
-                    <input type="email" class="form-control" id="ccEmailAddress" placeholder="Enter your CC emails" />
+                    <input [formControl]="ccEmailControl" type="email" class="form-control" id="ccEmailAddress" placeholder="Enter your CC emails" />
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="supportRequestType">Support Request Type</label>
-                    <select class="form-control form-select" name="supportRequestType" id="supportRequestType">
+                    <select [formControl]="supportRequestTypeControl" class="form-control form-select" name="supportRequestType" id="supportRequestType">
                       <option value="" selected>Select Support Request Type</option>
-                      <option value="High">Incident</option>
-                      <option value="Medium">Question</option>
-                      <option value="Low">Service Request</option>
+                      <option *ngFor="let supportRequestType of supportRequestTypes" [value]="supportRequestType.enumName">{{ supportRequestType.displayName }}</option>
                     </select>
+                    <div class="error-msg" *ngIf="supportRequestTypeControl.touched && supportRequestTypeControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please select support request type
+                    </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="subject">Subject</label>
-                    <input type="text" class="form-control" id="subject" placeholder="Enter your subject" />
+                    <input [formControl]="subjectControl" type="text" class="form-control" id="subject" placeholder="Enter your subject" />
+                    <div class="error-msg" *ngIf="subjectControl.touched && subjectControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please enter subject of the ticket
+                    </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" name="description" id="description"></textarea>
+                    <textarea [formControl]="descriptionControl" class="form-control" name="description" id="description"></textarea>
+                    <div class="error-msg" *ngIf="descriptionControl.touched && descriptionControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please enter description of the ticket
+                    </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="severity">Severity</label>
-                    <select class="form-control form-select" name="severity" id="severity">
+                    <select [formControl]="severityControl" class="form-control form-select" name="severity" id="severity">
                       <option value="" selected>Select Severity</option>
-                      <option value="High">High</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Low">Low</option>
+                      <option *ngFor="let severity of severities" [value]="severity.enumName">{{ severity.displayName }}</option>
                     </select>
+                    <div class="error-msg" *ngIf="severityControl.touched && severityControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please select severity
+                    </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="product">Product</label>
-                    <select class="form-control form-select" name="product" id="product">
+                    <select [formControl]="productControl" class="form-control form-select" name="product" id="product">
                       <option value="" selected>Select Product</option>
-                      <option value="High">XO Platform</option>
-                      <option value="Medium">Search Assist</option>
-                      <option value="Low">Smart Assist</option>
+                      <option *ngFor="let product of products" [value]="product.enumName">{{ product.displayName }}</option>
                     </select>
+                    <div class="error-msg" *ngIf="productControl.touched && productControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please select product
+                    </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="installationType">Installation Type</label>
-                    <select class="form-control form-select" name="installationType" id="installationType">
+                    <select [formControl]="installationTypeControl" class="form-control form-select" name="installationType" id="installationType">
                       <option value="" selected>Select Installation Type</option>
-                      <option value="High">On Premises</option>
-                      <option value="Medium">SaaS (Multi Tenent)</option>
-                      <option value="Low">SaaS (Private)</option>
+                      <option *ngFor="let installationType of installationTypes" [value]="installationType.enumName">{{ installationType.displayName }}</option>
                     </select>
+                    <div class="error-msg" *ngIf="installationTypeControl.touched && installationTypeControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please select installation type
+                    </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="affectedEnvironment">Affected Environment</label>
-                    <select class="form-control form-select" name="affectedEnvironment" id="affectedEnvironment">
+                    <select [formControl]="affectedEnvironmentControl" class="form-control form-select" name="affectedEnvironment" id="affectedEnvironment">
                       <option value="" selected>Select Affected Environment</option>
-                      <option value="High">No Affected Environment</option>
-                      <option value="Medium">NON PROD US</option>
-                      <option value="Low">NON PROD AU</option>
+                      <option *ngFor="let environment of environments" [value]="environment.enumName">{{ environment.displayName }}</option>
                     </select>
+                    <div class="error-msg" *ngIf="affectedEnvironmentControl.touched && affectedEnvironmentControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please select affected environment
+                    </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="platformVersion">Platform Version</label>
-                    <input type="text" class="form-control" id="platformVersion" placeholder="Enter your platform version" />
+                    <input [formControl]="platformVersionControl" type="text" class="form-control" id="platformVersion" placeholder="Enter your platform version" />
+                    <div class="error-msg" *ngIf="platformVersionControl.touched && platformVersionControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please enter platform version
+                    </div>
                   </div>
 
                   <div class="mb-3">
@@ -115,7 +137,7 @@
                             <i class="mdi mdi-file" style="font-size: 36px"></i>
                           </ng-template>
                           <br />
-                          <span style="font-size: 12px">{{ f.name }} ({{ f.type }})</span>
+                          <span style="font-size: 12px">{{ f.name }}</span>
                         </ngx-dropzone-label>
                       </ngx-dropzone-preview>
                     </ngx-dropzone>

@@ -21,7 +21,7 @@
   </div>
   <!-- end page title -->
 
-  <div class="row">
+  <div class="row" *ngIf="ticketDetails">
     <div class="d-lg-flex">
       <div class="chat-leftsidebar card">
         <div class="chat-leftsidebar-nav">
@@ -43,52 +43,60 @@
             <div class="tab-pane show active" id="details">
               <div class="col-sm-12 card-body">
                 <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Status</label>
-                  <div>Open</div>
+                  <label class="form-label" for="clientStatus">Status</label>
+                  <div>{{ getStatusDisplayName(ticketDetails.clientStatus) }}</div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Support Request Type</label>
-                  <div>Incident</div>
+                  <label class="form-label" for="supportRequestType">Support Request Type</label>
+                  <div>{{ getSupportTypeDisplayName(ticketDetails.supportRequestType) }}</div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Severity</label>
-                  <div>High</div>
+                  <label class="form-label" for="severity">Severity</label>
+                  <div>{{ getSeverityDisplayName(ticketDetails.severity) }}</div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Product</label>
-                  <div>XO Platform</div>
+                  <label class="form-label" for="affectedEnvironment">Product</label>
+                  <div>{{ getProductDisplayName(ticketDetails.affectedEnvironment) }}</div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Installation Type</label>
-                  <div>On Premises</div>
+                  <label class="form-label" for="installationType">Installation Type</label>
+                  <div>{{ getInstallationTypeDisplayName(ticketDetails.installationType) }}</div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Affected Environment</label>
-                  <div>No Affected Environment</div>
+                  <label class="form-label" for="affectedEnvironment">Affected Environment</label>
+                  <div>{{ getAffectedEnvironmentDisplayName(ticketDetails.affectedEnvironment) }}</div>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Platform Version</label>
-                  <div>10.0</div>
+                  <label class="form-label" for="platformVersion">Platform Version</label>
+                  <div>{{ ticketDetails.platformVersion }}</div>
                 </div>
               </div>
             </div>
 
             <div class="tab-pane" id="action">
               <div class="col-sm-12 card-body">
-                <div class="mb-3">
-                  <label class="form-label" for="statusTicket">Status</label>
-                  <select class="form-control form-select" name="statusTicket" id="statusTicket">
-                    <option value="" selected>Change Status</option>
-                    <option value="High">Re Open</option>
-                    <option value="Low">Solve</option>
-                  </select>
-                </div>
+                <form action="">
+                  <div class="mb-3">
+                    <label class="form-label" for="changeClientStatus">Ticket Status</label>
+                    <select [formControl]="statusControl" class="form-control form-select" name="changeClientStatus" id="changeClientStatus">
+                      <option value="" selected>Select Ticket Status</option>
+                      <option *ngFor="let status of clientStatus" [value]="status.enumName">{{ status.displayName }}</option>
+                    </select>
+                    <div class="error-msg" *ngIf="statusControl.touched && statusControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please select Status
+                    </div>
+                    <div class="mb-3 mt-2">
+                      <button type="submit" class="btn btn-primary w-md">Change Status</button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -103,7 +111,9 @@
               <div class="col-xl-4 col-7">
                 <div class="d-flex align-items-center">
                   <div class="flex-grow-1">
-                    <h5 class="font-size-15 text-truncate"><a href="#" class="text-reset"> Regarding kore.ai smart assist agent transfer integrade with search assist</a></h5>
+                    <h5 class="font-size-15 text-truncate">
+                      <a href="#" class="text-reset"> {{ ticketDetails.subject }}</a>
+                    </h5>
                   </div>
                 </div>
               </div>
@@ -359,16 +369,42 @@
           </div>
 
           <div class="p-3 border-top">
-            <div class="row">
-              <div class="col">
-                <div class="position-relative">
-                  <input type="text" class="form-control border chat-input" placeholder="Enter Message..." />
+            <form [formGroup]="msgSubmitForm" (ngSubmit)="sendMsg()">
+              <div class="row">
+                <div class="col">
+                  <div class="position-relative">
+                    <input type="text" [formControl]="messagesControl" class="form-control border chat-input" placeholder="Enter Message..." />
+                    <ngx-dropzone (change)="onSelect($event)" class="mt-1">
+                      <ngx-dropzone-label
+                        ><i class="mdi mdi-cloud-download-outline" style="font-size: 35px; stroke-width: 0"></i>
+                        <br />
+                        <span style="font-size: 13px">Drop your files to here or click to upload </span></ngx-dropzone-label
+                      >
+                      <ngx-dropzone-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f" [removable]="true" (removed)="onRemove(f)">
+                        <ngx-dropzone-label>
+                          <ng-container *ngIf="f.type.includes('image/'); else notImage">
+                            <i class="mdi mdi-image" style="font-size: 20px"></i>
+                          </ng-container>
+                          <ng-template #notImage>
+                            <i class="mdi mdi-file" style="font-size: 20px"></i>
+                          </ng-template>
+                          <br />
+                          <span style="font-size: 9px">{{ f.name }}</span>
+                        </ngx-dropzone-label>
+                      </ngx-dropzone-preview>
+                    </ngx-dropzone>
+
+                    <div class="error-msg" *ngIf="messageErrorStatus">
+                      <i class="fa fa-times-circle"></i>
+                      Please enter message or add attachment
+                    </div>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-primary chat-send w-md waves-effect waves-light"><span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send float-end"></i></button>
                 </div>
               </div>
-              <div class="col-auto">
-                <button type="submit" class="btn btn-primary chat-send w-md waves-effect waves-light"><span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send float-end"></i></button>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
