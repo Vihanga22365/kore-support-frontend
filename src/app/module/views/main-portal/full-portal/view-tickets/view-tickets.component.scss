@@ -1,0 +1,32 @@
+/* styles.css */
+ngx-dropzone-label {
+  font-family: inherit; /* Inherit the font-family from the parent */
+  font-size: inherit; /* Inherit the font-size from the parent */
+}
+
+/* styles.css */
+ngx-dropzone {
+  border: 1px dashed #b3b3b3; /* Change to your desired border width, style, and color */
+}
+
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 250px;
+}
+
+.form-control {
+  box-shadow: rgba(134, 134, 134, 0.02) 0px 1px 3px 0px, rgba(136, 136, 136, 0.15) 0px 0px 0px 1px;
+}
+
+.form-select {
+  box-shadow: rgba(134, 134, 134, 0.02) 0px 1px 3px 0px, rgba(136, 136, 136, 0.15) 0px 0px 0px 1px;
+}
+.error-msg {
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 3px 3px 3px 3px;
+  color: #d8000c;
+  background-color: #ffbaba;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}

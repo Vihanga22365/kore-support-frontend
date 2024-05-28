@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Status } from 'src/app/core/model/enums.model';
-import { GetTicketsResponse } from 'src/app/core/model/ticket.model';
+import { GetMessageResponse, GetTicketsResponse } from 'src/app/core/model/ticket.model';
 import { EnumService } from 'src/app/core/service/enum.service';
 import { TicketManageService } from 'src/app/core/service/ticket-manage.service';
 import { MessageTypeEnum, StatusEnum } from 'src/app/core/util/enums';
@@ -15,12 +15,15 @@ import Swal from 'sweetalert2';
   styleUrls: ['./single-ticket-manage.component.scss'],
 })
 export class SingleTicketManageComponent {
-  getSingleTicketSubscription!: Subscription;
-  createNewMessageSubscription!: Subscription;
+  getSingleTicketSubscription$!: Subscription;
+  createNewMessageSubscription$!: Subscription;
+  getAllMessagesSubscription$!: Subscription;
 
   ticketId!: string;
   ticketDetails!: GetTicketsResponse;
+  messageList: GetMessageResponse[] = [];
   clientStatus: Status[] = [];
+  userType!: string;
   emailAddress: string = 'vmihirangaz@virtusa.com';
 
   statusControl = new FormControl('', Validators.required);
@@ -34,6 +37,7 @@ export class SingleTicketManageComponent {
   constructor(private _ticketManageService: TicketManageService, private _enumService: EnumService, private activeRoute: ActivatedRoute, private _formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+    this.userType = this.checkClientOrVendor(this.emailAddress);
     this.ticketId = this.activeRoute.snapshot.paramMap.get('id')!;
     this.getSingleTicketData(this.ticketId);
     this.getStatusList();
@@ -41,7 +45,20 @@ export class SingleTicketManageComponent {
       status: this.statusControl,
       messages: this.messagesControl,
     });
+    this.getAllMessages();
   }
+
+  getAllMessages = () => {
+    this.getAllMessagesSubscription$ = this._ticketManageService.getAllMessages(this.ticketId).subscribe({
+      next: (response) => {
+        // console.log(response);
+        this.messageList = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  };
 
   sendMsg = () => {
     this.messageErrorStatus = false;
@@ -61,15 +78,16 @@ export class SingleTicketManageComponent {
         formData.append('attachments', file, file.name);
       });
     } else {
-      const blob = new Blob(['[]'], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify([])], { type: 'application/json' });
       formData.append('attachments', blob, 'empty.json');
     }
     formData.append('ccEmailAddresses', JSON.stringify(ccemails));
 
-    this.createNewMessageSubscription = this._ticketManageService.createNewMessage(this.ticketId, formData).subscribe({
+    this.createNewMessageSubscription$ = this._ticketManageService.createNewMessage(this.ticketId, formData).subscribe({
       next: (response) => {
         this.messagesControl.setValue('');
         this.files = [];
+        this.getAllMessages();
         Swal.fire({
           title: 'Success',
           text: 'Message sent successfully!',
@@ -107,7 +125,7 @@ export class SingleTicketManageComponent {
   };
 
   getSingleTicketData = (ticketNumber: string) => {
-    this.getSingleTicketSubscription = this._ticketManageService.getSingleTicket(ticketNumber).subscribe({
+    this.getSingleTicketSubscription$ = this._ticketManageService.getSingleTicket(ticketNumber).subscribe({
       next: (response) => {
         // console.log(response);
         if (response) {
@@ -170,7 +188,8 @@ export class SingleTicketManageComponent {
   // End Dropzone Code
 
   ngOnDestroy(): void {
-    this.getSingleTicketSubscription?.unsubscribe();
-    this.createNewMessageSubscription?.unsubscribe();
+    this.getSingleTicketSubscription$?.unsubscribe();
+    this.createNewMessageSubscription$?.unsubscribe();
+    this.getAllMessagesSubscription$?.unsubscribe();
   }
 }

@@ -30,6 +30,7 @@
                 <th>Request Type</th>
                 <th>Subject</th>
                 <th>Severity</th>
+                <th>Reopen</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -45,6 +46,19 @@
                   <a routerLink="/panel/manage-ticket/{{ ticket.id }}">{{ ticket.subject }}</a>
                 </td>
                 <td>{{ getSeverityDisplayName(ticket.severity) }}</td>
+                <td>
+                  <button
+                    type="button"
+                    [ngClass]="{ 'btn-warning': getStatusDisplayName(ticket.clientStatus) == 'Closed', 'btn-secondary': getStatusDisplayName(ticket.clientStatus) != 'Closed' }"
+                    class="btn btn-warning btn-sm waves-effect waves-light"
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                    [disabled]="getStatusDisplayName(ticket.clientStatus) == 'Closed' ? false : true"
+                    (click)="reopenTicket(ticket.id)"
+                  >
+                    Reopen
+                  </button>
+                </td>
                 <td>{{ getStatusDisplayName(ticket.clientStatus) }}</td>
               </tr>
             </tbody>
@@ -64,6 +78,43 @@
           </nav>
         </div>
       </div>
+
+      <!-- Model  -->
+      <!-- Model  -->
+      <!-- Model  -->
+      <!-- Model  -->
+
+      <!-- Modal -->
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <form [formGroup]="reopenTicketSubmitForm" (ngSubmit)="reopenTicketDetailsSubmit()">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Reopen Ticket - Ticket No {{ reopenTicketId }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label" for="reopenReason">Reason</label>
+                  <textarea [formControl]="reopenReasonControl" class="form-control" name="reopenReason" id="reopenReason"></textarea>
+                  <div class="error-msg" *ngIf="reopenReasonControl.touched && reopenReasonControl.invalid">
+                    <i class="fa fa-times-circle"></i>
+                    Please enter reason for reopening the ticket
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button #closeButton type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary waves-effect waves-light">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Model  -->
+      <!-- Model  -->
+      <!-- Model  -->
+      <!-- Model  -->
     </div>
     <!-- end col -->
   </div>

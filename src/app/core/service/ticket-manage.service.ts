@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // Import the 'HttpClient' class
-import { GetTicketsResponse, Ticket, TicketResponse } from '../model/ticket.model';
+import { GetMessageResponse, GetTicketsResponse, ReopenTicket, Ticket, TicketResponse } from '../model/ticket.model';
 import { environment } from 'src/environments/environments';
 
 @Injectable({
@@ -23,5 +23,13 @@ export class TicketManageService {
 
   createNewMessage = (ticketNumber: string, messageData: FormData) => {
     return this._httpClient.post(`${environment.TICKET_URL}/${ticketNumber}/CreateMessage`, messageData);
+  };
+
+  getAllMessages = (ticketNumber: string) => {
+    return this._httpClient.get<GetMessageResponse[]>(`${environment.TICKET_URL}/getAllMessagesByTicketId/${ticketNumber}`);
+  };
+
+  createReopenTicket = (reopenTicket: ReopenTicket) => {
+    return this._httpClient.post(`${environment.TICKET_URL}/reopen`, reopenTicket);
   };
 }

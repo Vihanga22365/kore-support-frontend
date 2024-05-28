@@ -12,6 +12,13 @@ export interface Ticket {
   attachments: File[];
 }
 
+export interface ReopenTicket {
+  ticketId: number;
+  sentBy: string;
+  reason: string;
+  ccEmailAddresses: string[];
+}
+
 export interface TicketResponse {
   id: number;
   createdAt: string;
@@ -43,4 +50,15 @@ export interface GetTicketsResponse {
   clientStatus: string;
   vendorStatus: string;
   reopenReason: string | null;
+}
+
+export interface GetMessageResponse {
+  id: number;
+  sentBy: string;
+  sender: string;
+  ccEmailAddresses: string[];
+  content: string;
+  createdAt: string;
+  uniqueId: string;
+  attachments: string[];
 }

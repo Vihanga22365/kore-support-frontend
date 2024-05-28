@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { GetTicketsResponse } from 'src/app/core/model/ticket.model';
+import { GetTicketsResponse, ReopenTicket } from 'src/app/core/model/ticket.model';
 import { EnumService } from 'src/app/core/service/enum.service';
 import { TicketManageService } from 'src/app/core/service/ticket-manage.service';
 import { SeverityEnum, SupportRequestTypeEnum } from 'src/app/core/util/enums';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-view-tickets',
@@ -11,22 +13,68 @@ import { SeverityEnum, SupportRequestTypeEnum } from 'src/app/core/util/enums';
   styleUrls: ['./view-tickets.component.scss'],
 })
 export class ViewTicketsComponent implements OnInit, OnDestroy {
+  @ViewChild('closeButton') closeButton!: ElementRef;
+
   getAllTicketsSubscription$!: Subscription;
+  createReopenTicketSubscription$!: Subscription;
 
   ticketList: GetTicketsResponse[] = [];
+  reopenTicketId!: number;
 
   pages: number[] = [];
   currentPage = 1;
   totalPages = 100;
   displayPages = 1;
 
-  constructor(private _ticketManageService: TicketManageService, private _enumService: EnumService) {
+  reopenReasonControl = new FormControl('', Validators.required);
+
+  reopenTicketSubmitForm!: FormGroup;
+
+  constructor(private _ticketManageService: TicketManageService, private _enumService: EnumService, private _formBuilder: FormBuilder) {
     this.updatePages();
+    this.reopenTicketSubmitForm = this._formBuilder.group({
+      reopenReason: this.reopenReasonControl,
+    });
   }
 
   ngOnInit(): void {
     this.getAllTicketsData();
   }
+
+  reopenTicketDetailsSubmit = () => {
+    const reopenTicket: ReopenTicket = {
+      ticketId: this.reopenTicketId,
+      sentBy: this.ticketList.filter((ticket) => ticket.id === this.reopenTicketId)[0].emailAddress,
+      reason: this.reopenReasonControl.value!,
+      ccEmailAddresses: this.ticketList.filter((ticket) => ticket.id === this.reopenTicketId)[0].ccEmailAddresses,
+    };
+
+    this.createReopenTicketSubscription$ = this._ticketManageService.createReopenTicket(reopenTicket).subscribe({
+      next: (response) => {
+        this.getAllTicketsData();
+        this.reopenTicketSubmitForm.reset();
+        this.closeButton.nativeElement.click();
+        Swal.fire({
+          title: 'Success',
+          text: 'Ticket reopen successfully!',
+          icon: 'success',
+          timer: 4000, // 4 seconds
+          background: '#bcf1cd',
+          showConfirmButton: false,
+        });
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error reopening the ticketss. Please try again later.',
+          icon: 'error',
+          timer: 4000, // 4 seconds
+          showConfirmButton: false,
+          background: '#fbdde2',
+        });
+      },
+    });
+  };
 
   getAllTicketsData = () => {
     this.getAllTicketsSubscription$ = this._ticketManageService.getAllTickets().subscribe({
@@ -37,6 +85,10 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
         console.log(error);
       },
     });
+  };
+
+  reopenTicket = (reopenTicketId: number) => {
+    this.reopenTicketId = reopenTicketId;
   };
 
   getSupportTypeDisplayName(enumName: any): string {
@@ -67,5 +119,6 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.getAllTicketsSubscription$?.unsubscribe();
+    this.createReopenTicketSubscription$?.unsubscribe();
   }
 }
