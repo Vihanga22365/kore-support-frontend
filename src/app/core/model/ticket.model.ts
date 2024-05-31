@@ -19,6 +19,14 @@ export interface ReopenTicket {
   ccEmailAddresses: string[];
 }
 
+export interface CloseTicket {
+  sentBy: string;
+}
+
+export interface WaitingTimeResponse {
+  duration: string;
+}
+
 export interface TicketResponse {
   id: number;
   createdAt: string;

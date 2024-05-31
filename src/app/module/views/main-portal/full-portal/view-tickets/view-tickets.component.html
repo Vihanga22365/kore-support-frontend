@@ -30,6 +30,7 @@
                 <th>Request Type</th>
                 <th>Subject</th>
                 <th>Severity</th>
+                <th>Waiting Time</th>
                 <th>Reopen</th>
                 <th>Status</th>
               </tr>
@@ -46,7 +47,10 @@
                   <a routerLink="/panel/manage-ticket/{{ ticket.id }}">{{ ticket.subject }}</a>
                 </td>
                 <td>{{ getSeverityDisplayName(ticket.severity) }}</td>
-                <td>
+                <td align="center">
+                  <button type="button" class="btn btn-primary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#staticBackdropWaitingTime" (click)="waitingTime(ticket.id)">View</button>
+                </td>
+                <td align="center">
                   <button
                     type="button"
                     [ngClass]="{ 'btn-warning': getStatusDisplayName(ticket.clientStatus) == 'Closed', 'btn-secondary': getStatusDisplayName(ticket.clientStatus) != 'Closed' }"
@@ -95,7 +99,7 @@
               </div>
               <div class="modal-body">
                 <div class="mb-3">
-                  <label class="form-label" for="reopenReason">Reason</label>
+                  <label class="form-label" for="reopenReason">Reason <span style="color: red">*</span></label>
                   <textarea [formControl]="reopenReasonControl" class="form-control" name="reopenReason" id="reopenReason"></textarea>
                   <div class="error-msg" *ngIf="reopenReasonControl.touched && reopenReasonControl.invalid">
                     <i class="fa fa-times-circle"></i>
@@ -105,7 +109,39 @@
               </div>
               <div class="modal-footer">
                 <button #closeButton type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary waves-effect waves-light">Save</button>
+                <button [disabled]="reopenSubmitBtnClicked" type="submit" class="btn btn-primary waves-effect waves-light">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal fade" id="staticBackdropWaitingTime" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <form [formGroup]="reopenTicketSubmitForm" (ngSubmit)="reopenTicketDetailsSubmit()">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Waiting Time according to attempt - Ticket No {{ waitingTicketId }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label" for="attemptCount">Attempt </label>
+                  <select #attemptDropdown class="form-control form-select" name="attemptCount" id="attemptCount" (change)="getWaitingTimeByAttempt($event)">
+                    <option value="" selected>Select Attempt</option>
+                    <option *ngFor="let i of [].constructor(maxAttempt); let index = index" [value]="index + 1">Attempt {{ index + 1 }}</option>
+                  </select>
+                </div>
+                <div class="mb-3" *ngIf="finalWaitingTime">
+                  <label class="form-label" for="waitingTime">Waiting Time </label>
+                  <div class="waiting-time-msg" style="text-align: center">
+                    <!-- <i class="fa fa-clock"></i> -->
+                    <span style="text-transform: capitalize"> {{ finalWaitingTime.duration }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button #closeButton type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </form>

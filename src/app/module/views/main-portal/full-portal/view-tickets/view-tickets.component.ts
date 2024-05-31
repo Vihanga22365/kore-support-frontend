@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { GetTicketsResponse, ReopenTicket } from 'src/app/core/model/ticket.model';
+import { GetTicketsResponse, ReopenTicket, WaitingTimeResponse } from 'src/app/core/model/ticket.model';
 import { EnumService } from 'src/app/core/service/enum.service';
 import { TicketManageService } from 'src/app/core/service/ticket-manage.service';
 import { SeverityEnum, SupportRequestTypeEnum } from 'src/app/core/util/enums';
@@ -14,12 +14,20 @@ import Swal from 'sweetalert2';
 })
 export class ViewTicketsComponent implements OnInit, OnDestroy {
   @ViewChild('closeButton') closeButton!: ElementRef;
+  @ViewChild('attemptDropdown') attemptDropdown!: ElementRef;
 
   getAllTicketsSubscription$!: Subscription;
   createReopenTicketSubscription$!: Subscription;
+  getMaxAttemptsSubscription$!: Subscription;
+  getWaitingTimeByAttemptSubscription$!: Subscription;
 
   ticketList: GetTicketsResponse[] = [];
   reopenTicketId!: number;
+  waitingTicketId!: number;
+  maxAttempt!: number;
+  finalWaitingTime!: WaitingTimeResponse | null;
+
+  reopenSubmitBtnClicked: boolean = false;
 
   pages: number[] = [];
   currentPage = 1;
@@ -42,6 +50,16 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
   }
 
   reopenTicketDetailsSubmit = () => {
+    this.reopenSubmitBtnClicked = true;
+
+    if (this.reopenTicketSubmitForm.invalid) {
+      Object.values(this.reopenTicketSubmitForm.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+      this.reopenSubmitBtnClicked = false;
+      return;
+    }
+
     const reopenTicket: ReopenTicket = {
       ticketId: this.reopenTicketId,
       sentBy: this.ticketList.filter((ticket) => ticket.id === this.reopenTicketId)[0].emailAddress,
@@ -53,6 +71,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.getAllTicketsData();
         this.reopenTicketSubmitForm.reset();
+        this.reopenSubmitBtnClicked = false;
         this.closeButton.nativeElement.click();
         Swal.fire({
           title: 'Success',
@@ -64,6 +83,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
         });
       },
       error: (error) => {
+        this.reopenSubmitBtnClicked = false;
         Swal.fire({
           title: 'Error',
           text: 'There was an error reopening the ticketss. Please try again later.',
@@ -89,6 +109,33 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
 
   reopenTicket = (reopenTicketId: number) => {
     this.reopenTicketId = reopenTicketId;
+  };
+
+  waitingTime = (waitingTicketId: number) => {
+    this.attemptDropdown.nativeElement.value = '';
+    this.finalWaitingTime = null;
+    this.waitingTicketId = waitingTicketId;
+    this.getMaxAttemptsSubscription$ = this._ticketManageService.getTicketMaxAttempts(this.waitingTicketId).subscribe({
+      next: (response) => {
+        this.maxAttempt = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  getWaitingTimeByAttempt = (event: Event) => {
+    this.finalWaitingTime = null;
+    let attempt = (event.target as HTMLTextAreaElement).value;
+    this.getWaitingTimeByAttemptSubscription$ = this._ticketManageService.getWaitingTimeByAttempt(this.waitingTicketId, attempt).subscribe({
+      next: (response) => {
+        this.finalWaitingTime = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   };
 
   getSupportTypeDisplayName(enumName: any): string {
@@ -120,5 +167,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.getAllTicketsSubscription$?.unsubscribe();
     this.createReopenTicketSubscription$?.unsubscribe();
+    this.getMaxAttemptsSubscription$?.unsubscribe();
+    this.getWaitingTimeByAttemptSubscription$?.unsubscribe();
   }
 }

@@ -34,7 +34,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="supportRequestType">Support Request Type</label>
+                    <label class="form-label" for="supportRequestType">Support Request Type <span style="color: red">*</span></label>
                     <select [formControl]="supportRequestTypeControl" class="form-control form-select" name="supportRequestType" id="supportRequestType">
                       <option value="" selected>Select Support Request Type</option>
                       <option *ngFor="let supportRequestType of supportRequestTypes" [value]="supportRequestType.enumName">{{ supportRequestType.displayName }}</option>
@@ -46,7 +46,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="subject">Subject</label>
+                    <label class="form-label" for="subject">Subject <span style="color: red">*</span></label>
                     <input [formControl]="subjectControl" type="text" class="form-control" id="subject" placeholder="Enter your subject" />
                     <div class="error-msg" *ngIf="subjectControl.touched && subjectControl.invalid">
                       <i class="fa fa-times-circle"></i>
@@ -55,7 +55,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="description">Description</label>
+                    <label class="form-label" for="description">Description <span style="color: red">*</span></label>
                     <textarea [formControl]="descriptionControl" class="form-control" name="description" id="description"></textarea>
                     <div class="error-msg" *ngIf="descriptionControl.touched && descriptionControl.invalid">
                       <i class="fa fa-times-circle"></i>
@@ -64,7 +64,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="severity">Severity</label>
+                    <label class="form-label" for="severity">Severity <span style="color: red">*</span></label>
                     <select [formControl]="severityControl" class="form-control form-select" name="severity" id="severity">
                       <option value="" selected>Select Severity</option>
                       <option *ngFor="let severity of severities" [value]="severity.enumName">{{ severity.displayName }}</option>
@@ -76,7 +76,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="product">Product</label>
+                    <label class="form-label" for="product">Product <span style="color: red">*</span></label>
                     <select [formControl]="productControl" class="form-control form-select" name="product" id="product">
                       <option value="" selected>Select Product</option>
                       <option *ngFor="let product of products" [value]="product.enumName">{{ product.displayName }}</option>
@@ -88,7 +88,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="installationType">Installation Type</label>
+                    <label class="form-label" for="installationType">Installation Type <span style="color: red">*</span></label>
                     <select [formControl]="installationTypeControl" class="form-control form-select" name="installationType" id="installationType">
                       <option value="" selected>Select Installation Type</option>
                       <option *ngFor="let installationType of installationTypes" [value]="installationType.enumName">{{ installationType.displayName }}</option>
@@ -100,7 +100,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="affectedEnvironment">Affected Environment</label>
+                    <label class="form-label" for="affectedEnvironment">Affected Environment <span style="color: red">*</span></label>
                     <select [formControl]="affectedEnvironmentControl" class="form-control form-select" name="affectedEnvironment" id="affectedEnvironment">
                       <option value="" selected>Select Affected Environment</option>
                       <option *ngFor="let environment of environments" [value]="environment.enumName">{{ environment.displayName }}</option>
@@ -112,7 +112,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="platformVersion">Platform Version</label>
+                    <label class="form-label" for="platformVersion">Platform Version <span style="color: red">*</span></label>
                     <input [formControl]="platformVersionControl" type="text" class="form-control" id="platformVersion" placeholder="Enter your platform version" />
                     <div class="error-msg" *ngIf="platformVersionControl.touched && platformVersionControl.invalid">
                       <i class="fa fa-times-circle"></i>
@@ -124,7 +124,7 @@
                     <label class="form-label" for="attachments">Attachments</label>
                     <ngx-dropzone (change)="onSelect($event)">
                       <ngx-dropzone-label
-                        ><i class="mdi mdi-upload" style="font-size: 50px; stroke-width: 1"></i>
+                        ><i class="mdi mdi-cloud-download-outline" style="font-size: 50px; stroke-width: 0"></i>
                         <br />
                         <span style="font-size: 14px">Drop your files to here or click to upload </span></ngx-dropzone-label
                       >
@@ -144,7 +144,7 @@
                   </div>
 
                   <div class="mt-4">
-                    <button type="submit" class="btn btn-primary w-md">Submit</button>
+                    <button [disabled]="createTicketSubmitBtnClicked" type="submit" class="btn btn-primary w-md">Submit</button>
                   </div>
                 </form>
               </div>

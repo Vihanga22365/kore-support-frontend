@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Status } from 'src/app/core/model/enums.model';
-import { GetMessageResponse, GetTicketsResponse } from 'src/app/core/model/ticket.model';
+import { CloseTicket, GetMessageResponse, GetTicketsResponse } from 'src/app/core/model/ticket.model';
 import { EnumService } from 'src/app/core/service/enum.service';
 import { TicketManageService } from 'src/app/core/service/ticket-manage.service';
 import { MessageTypeEnum, StatusEnum } from 'src/app/core/util/enums';
@@ -14,10 +14,13 @@ import Swal from 'sweetalert2';
   templateUrl: './single-ticket-manage.component.html',
   styleUrls: ['./single-ticket-manage.component.scss'],
 })
-export class SingleTicketManageComponent {
+export class SingleTicketManageComponent implements OnInit, AfterViewChecked, OnDestroy {
   getSingleTicketSubscription$!: Subscription;
   createNewMessageSubscription$!: Subscription;
   getAllMessagesSubscription$!: Subscription;
+  updateTicketStatusSubscription$!: Subscription;
+
+  @ViewChild('chatContainer') private chatContainer!: ElementRef;
 
   ticketId!: string;
   ticketDetails!: GetTicketsResponse;
@@ -26,13 +29,19 @@ export class SingleTicketManageComponent {
   userType!: string;
   emailAddress: string = 'vmihirangaz@virtusa.com';
 
+  sendMsgSubmitBtnClicked: boolean = false;
+  changeStatusSubmitBtnClicked: boolean = false;
+
   statusControl = new FormControl('', Validators.required);
   messagesControl = new FormControl();
   status: any;
 
   messageErrorStatus: boolean = false;
+  hasScrolled: boolean = true;
+  scrollCount: number = 0;
 
   msgSubmitForm!: FormGroup;
+  changeStatusSubmitForm!: FormGroup;
 
   constructor(private _ticketManageService: TicketManageService, private _enumService: EnumService, private activeRoute: ActivatedRoute, private _formBuilder: FormBuilder) {}
 
@@ -45,8 +54,69 @@ export class SingleTicketManageComponent {
       status: this.statusControl,
       messages: this.messagesControl,
     });
+    this.changeStatusSubmitForm = this._formBuilder.group({
+      status: this.statusControl,
+    });
     this.getAllMessages();
   }
+
+  ngAfterViewChecked() {
+    if (this.chatContainer && this.hasScrolled) {
+      this.scrollToElement(this.chatContainer.nativeElement);
+      this.scrollCount++;
+
+      if (this.scrollCount > 2) {
+        this.hasScrolled = false;
+      }
+    }
+  }
+
+  scrollToElement(element: HTMLElement): void {
+    console.log(element);
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  changeStatusDetailsSubmit = () => {
+    this.changeStatusSubmitBtnClicked = true;
+
+    if (this.changeStatusSubmitForm.invalid) {
+      Object.values(this.changeStatusSubmitForm.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+      this.changeStatusSubmitBtnClicked = false;
+      return;
+    }
+
+    const data: CloseTicket = {
+      sentBy: this.emailAddress,
+    };
+
+    this.updateTicketStatusSubscription$ = this._ticketManageService.updateTicketStatus(this.ticketId, data).subscribe({
+      next: (response) => {
+        this.getSingleTicketData(this.ticketId);
+        this.changeStatusSubmitBtnClicked = false;
+        Swal.fire({
+          title: 'Success',
+          text: 'Status updated successfully!',
+          icon: 'success',
+          timer: 4000, // 4 seconds
+          background: '#bcf1cd',
+          showConfirmButton: false,
+        });
+      },
+      error: (error) => {
+        this.changeStatusSubmitBtnClicked = false;
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error updating the status. Please try again later.',
+          icon: 'error',
+          timer: 4000, // 4 seconds
+          showConfirmButton: false,
+          background: '#fbdde2',
+        });
+      },
+    });
+  };
 
   getAllMessages = () => {
     this.getAllMessagesSubscription$ = this._ticketManageService.getAllMessages(this.ticketId).subscribe({
@@ -61,9 +131,11 @@ export class SingleTicketManageComponent {
   };
 
   sendMsg = () => {
+    this.sendMsgSubmitBtnClicked = true;
     this.messageErrorStatus = false;
     if ((this.messagesControl.value === '' || this.messagesControl.value === null) && this.files.length == 0) {
       this.messageErrorStatus = true;
+      this.sendMsgSubmitBtnClicked = false;
       return;
     }
 
@@ -87,6 +159,7 @@ export class SingleTicketManageComponent {
       next: (response) => {
         this.messagesControl.setValue('');
         this.files = [];
+        this.sendMsgSubmitBtnClicked = false;
         this.getAllMessages();
         Swal.fire({
           title: 'Success',
@@ -98,6 +171,7 @@ export class SingleTicketManageComponent {
         });
       },
       error: (error) => {
+        this.sendMsgSubmitBtnClicked = false;
         Swal.fire({
           title: 'Error',
           text: 'There was an error sending the message. Please try again later.',
@@ -139,7 +213,7 @@ export class SingleTicketManageComponent {
   };
 
   getStatusList = () => {
-    this.clientStatus = this._enumService.getStatus().filter((status) => status.enumName !== StatusEnum.AWAITING_REPLY);
+    this.clientStatus = this._enumService.getStatus().filter((status) => status.enumName !== StatusEnum.AWAITING_REPLY && status.enumName !== StatusEnum.SOLVED && status.enumName !== StatusEnum.OPEN);
   };
 
   getSupportTypeDisplayName(enumName: any): string {
@@ -191,5 +265,6 @@ export class SingleTicketManageComponent {
     this.getSingleTicketSubscription$?.unsubscribe();
     this.createNewMessageSubscription$?.unsubscribe();
     this.getAllMessagesSubscription$?.unsubscribe();
+    this.updateTicketStatusSubscription$?.unsubscribe();
   }
 }

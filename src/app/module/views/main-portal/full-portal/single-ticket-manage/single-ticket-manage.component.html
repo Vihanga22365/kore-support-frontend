@@ -81,9 +81,13 @@
 
             <div class="tab-pane" id="action">
               <div class="col-sm-12 card-body">
-                <form action="">
+                <div class="mb-3">
+                  <label class="form-label" for="clientStatus">Current Status</label>
+                  <div>{{ getStatusDisplayName(ticketDetails.clientStatus) }}</div>
+                </div>
+                <form [formGroup]="changeStatusSubmitForm" (ngSubmit)="changeStatusDetailsSubmit()">
                   <div class="mb-3">
-                    <label class="form-label" for="changeClientStatus">Ticket Status</label>
+                    <label class="form-label" for="changeClientStatus">Ticket Status <span style="color: red">*</span></label>
                     <select [formControl]="statusControl" class="form-control form-select" name="changeClientStatus" id="changeClientStatus">
                       <option value="" selected>Select Ticket Status</option>
                       <option *ngFor="let status of clientStatus" [value]="status.enumName">{{ status.displayName }}</option>
@@ -93,7 +97,13 @@
                       Please select Status
                     </div>
                     <div class="mb-3 mt-2">
-                      <button type="submit" class="btn btn-primary w-md">Change Status</button>
+                      <button
+                        [disabled]="changeStatusSubmitBtnClicked || getStatusDisplayName(ticketDetails.clientStatus) == 'Closed' || getStatusDisplayName(ticketDetails.clientStatus) == 'Solved'"
+                        type="submit"
+                        class="btn btn-primary w-md"
+                      >
+                        Change Status
+                      </button>
                     </div>
                   </div>
                 </form>
@@ -132,7 +142,7 @@
                       </div>
                       <div class="ctext-wrap">
                         <div class="ctext-wrap-content" style="width: 100%">
-                          <p class="mb-0 text-start" *ngIf="message.content">{{ message.content }}</p>
+                          <p class="mb-0 text-start" *ngIf="message.content != '' && message.content != null && message.content != 'null'">{{ message.content }}</p>
 
                           <ul class="list-inline message-img mt-2 mb-0" *ngIf="message.attachments">
                             <li class="list-inline-item message-img-list" *ngFor="let attachment of message.attachments">
@@ -158,7 +168,7 @@
                       </div>
                       <div class="ctext-wrap">
                         <div class="ctext-wrap-content" style="width: 100%">
-                          <p class="mb-0 text-start" *ngIf="message.content">{{ message.content }}</p>
+                          <p class="mb-0 text-start" *ngIf="message.content != '' && message.content != null && message.content != 'null'">{{ message.content }}</p>
 
                           <ul class="list-inline message-img mt-2 mb-0" *ngIf="message.attachments">
                             <li class="list-inline-item message-img-list" *ngFor="let attachment of message.attachments">
@@ -174,6 +184,7 @@
                   </div>
                 </div>
               </li>
+              <span #chatContainer></span>
             </ul>
           </div>
 
@@ -209,7 +220,13 @@
                   </div>
                 </div>
                 <div class="col-auto">
-                  <button type="submit" class="btn btn-primary chat-send w-md waves-effect waves-light"><span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send float-end"></i></button>
+                  <button
+                    [disabled]="sendMsgSubmitBtnClicked || getStatusDisplayName(ticketDetails.clientStatus) == 'Closed' || getStatusDisplayName(ticketDetails.clientStatus) == 'Solved'"
+                    type="submit"
+                    class="btn btn-primary chat-send w-md waves-effect waves-light"
+                  >
+                    <span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send float-end"></i>
+                  </button>
                 </div>
               </div>
             </form>

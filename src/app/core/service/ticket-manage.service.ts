@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // Import the 'HttpClient' class
-import { GetMessageResponse, GetTicketsResponse, ReopenTicket, Ticket, TicketResponse } from '../model/ticket.model';
+import { CloseTicket, GetMessageResponse, GetTicketsResponse, ReopenTicket, Ticket, TicketResponse, WaitingTimeResponse } from '../model/ticket.model';
 import { environment } from 'src/environments/environments';
 
 @Injectable({
@@ -31,5 +31,17 @@ export class TicketManageService {
 
   createReopenTicket = (reopenTicket: ReopenTicket) => {
     return this._httpClient.post(`${environment.TICKET_URL}/reopen`, reopenTicket);
+  };
+
+  updateTicketStatus = (ticketNumber: string, closeTicketData: CloseTicket) => {
+    return this._httpClient.put(`${environment.TICKET_URL}/${ticketNumber}/closeTicket`, closeTicketData);
+  };
+
+  getTicketMaxAttempts = (ticketNumber: number) => {
+    return this._httpClient.get<number>(`${environment.TICKET_URL}/max-attempts/${ticketNumber}`);
+  };
+
+  getWaitingTimeByAttempt = (ticketNumber: number, attempt: string) => {
+    return this._httpClient.get<WaitingTimeResponse>(`${environment.TICKET_URL}/${ticketNumber}/open-duration/${attempt}`);
   };
 }

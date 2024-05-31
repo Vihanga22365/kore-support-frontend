@@ -32,6 +32,8 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   installationTypes: InstallationType[] = [];
   supportRequestTypes: SupportRequestType[] = [];
 
+  createTicketSubmitBtnClicked: boolean = false;
+
   ticketSubmitForm!: FormGroup;
 
   constructor(private _enumService: EnumService, private _formBuilder: FormBuilder, private _ticketService: TicketManageService) {}
@@ -72,10 +74,12 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   // End Dropzone Code
 
   createTicket() {
+    this.createTicketSubmitBtnClicked = true;
     if (this.ticketSubmitForm.invalid) {
       Object.values(this.ticketSubmitForm.controls).forEach((control) => {
         control.markAsTouched();
       });
+      this.createTicketSubmitBtnClicked = false;
       return;
     }
 
@@ -107,6 +111,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         if (ticketFormResponse.id) {
           this.ticketSubmitForm.reset();
           this.files = [];
+          this.createTicketSubmitBtnClicked = false;
           Swal.fire({
             title: 'Success',
             text: 'Ticket created successfully!',
@@ -118,6 +123,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
+        this.createTicketSubmitBtnClicked = false;
         Swal.fire({
           title: 'Error',
           text: 'There was an error creating the ticket. Please try again later.',
