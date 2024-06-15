@@ -28,9 +28,30 @@
               <div class="mt-4">
                 <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Submit a Request</h5>
                 <form [formGroup]="ticketSubmitForm" (ngSubmit)="createTicket()">
+                  <!-- <div class="col-lg-8 col-md-12">
+                    <label class="form-label" for="ccEmailAddress">CC Email Addreses</label>
+                    <input (keydown.enter)="addValue()" [(ngModel)]="inputValue" [formControl]="ccEmailControl" type="email" class="form-control" id="ccEmailAddress" placeholder="Enter your CC emails" />
+                    <div class="chip-container">
+                      <mat-chip *ngFor="let value of ccEmailValues" class="chip" (click)="removeValue(value)">
+                        {{ value }}
+                        <span class="mdi mdi-close-circle" (click)="removeValue(value)"></span>
+                      </mat-chip>
+                    </div>
+                  </div> -->
                   <div class="mb-3">
                     <label class="form-label" for="ccEmailAddress">CC Email Addreses</label>
-                    <input [formControl]="ccEmailControl" type="email" class="form-control" id="ccEmailAddress" placeholder="Enter your CC emails" />
+                    <input (keydown.enter)="$event.preventDefault(); addValue()" [(ngModel)]="inputValue" [formControl]="ccEmailControl" type="email" class="form-control" id="ccEmailAddress" placeholder="Enter your CC emails" />
+                    <div class="chip-container">
+                      <mat-chip
+                        style="background-color: #bfbfbf; padding: 7px; border-radius: 15px; margin: 5px; margin-top: 10px; box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px; cursor: pointer"
+                        *ngFor="let value of ccEmailValues"
+                        class="chip"
+                        (click)="removeValue(value)"
+                      >
+                        {{ value }}
+                        <span style="cursor: pointer" class="mdi mdi-close-circle" (click)="removeValue(value)"></span>
+                      </mat-chip>
+                    </div>
                   </div>
 
                   <div class="mb-3">

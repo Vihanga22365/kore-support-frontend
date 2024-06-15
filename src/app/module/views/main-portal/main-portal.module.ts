@@ -33,6 +33,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,21 @@ import { MatButtonModule } from '@angular/material/button';
     CreateAffectedEnvironmentComponent,
     ViewAffectedEnvironmentComponent,
   ],
-  imports: [CommonModule, MetismenuAngularModule, MainPortalRoutingModule, DataTablesModule, MatChipsModule, NgxDropzoneModule, ReactiveFormsModule, HttpClientModule, MatDialogModule, MatButtonModule, FormsModule],
+  imports: [
+    CommonModule,
+    MetismenuAngularModule,
+    MainPortalRoutingModule,
+    DataTablesModule,
+    MatChipsModule,
+    NgxDropzoneModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatDialogModule,
+    MatButtonModule,
+    FormsModule,
+    MatAutocompleteModule,
+    MatIconModule,
+  ],
   exports: [MainPortalComponent],
 })
 export class MainPortalModule {}

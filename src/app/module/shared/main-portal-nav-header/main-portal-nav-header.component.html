@@ -29,8 +29,13 @@
 
     <div class="d-flex">
       <form class="app-search d-none d-lg-block">
-        <div class="position-relative">
-          <input type="text" class="form-control" placeholder="Search..." />
+        <div class="position-relative custom-dropdown">
+          <input class="form-control" type="text" placeholder="Search" (keyup)="filterOptions($event)" [value]="searchTerm" />
+          <ul *ngIf="showDropdown">
+            <li *ngFor="let option of options" (click)="selectOption(option.ticketId)">
+              {{ option.ticketNumber }}
+            </li>
+          </ul>
           <span class="fa fa-search"></span>
         </div>
       </form>
@@ -167,13 +172,13 @@
 
       <div class="dropdown d-inline-block">
         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img class="rounded-circle header-profile-user" src="assets/images/users/user-4.png" alt="Header Avatar" />
+          <img style="height: 41px; width: 41px" class="rounded-circle header-profile-user" src="assets/images/users/user-4.png" alt="Header Avatar" />
         </button>
         <div class="dropdown-menu dropdown-menu-end">
           <!-- item-->
           <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle font-size-17 text-muted align-middle me-1"></i> Profile</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item text-danger" routerLink="/log-portal/login"><i class="mdi mdi-power font-size-17 text-muted align-middle me-1 text-danger"></i> Logout</a>
+          <a style="cursor: pointer" class="dropdown-item text-danger" (click)="logOutUser()"><i class="mdi mdi-power font-size-17 text-muted align-middle me-1 text-danger"></i> Logout</a>
         </div>
       </div>
     </div>

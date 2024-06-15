@@ -1,7 +1,7 @@
 import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { Status } from 'src/app/core/model/enums.model';
 import { CloseTicket, GetMessageResponse, GetTicketsResponse } from 'src/app/core/model/ticket.model';
 import { EnumService } from 'src/app/core/service/enum.service';
@@ -43,7 +43,17 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
   msgSubmitForm!: FormGroup;
   changeStatusSubmitForm!: FormGroup;
 
-  constructor(private _ticketManageService: TicketManageService, private _enumService: EnumService, private activeRoute: ActivatedRoute, private _formBuilder: FormBuilder) {}
+  constructor(private _ticketManageService: TicketManageService, private _enumService: EnumService, private activeRoute: ActivatedRoute, private _formBuilder: FormBuilder, private router: Router) {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.loadData();
+    });
+  }
+
+  loadData() {
+    this.ticketId = this.activeRoute.snapshot.paramMap.get('id')!;
+    this.getSingleTicketData(this.ticketId);
+    this.getAllMessages();
+  }
 
   ngOnInit(): void {
     this.userType = this.checkClientOrVendor(this.emailAddress);
@@ -99,9 +109,8 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
           title: 'Success',
           text: 'Status updated successfully!',
           icon: 'success',
-          timer: 4000, // 4 seconds
           background: '#bcf1cd',
-          showConfirmButton: false,
+          showConfirmButton: true,
         });
       },
       error: (error) => {
@@ -110,8 +119,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
           title: 'Error',
           text: 'There was an error updating the status. Please try again later.',
           icon: 'error',
-          timer: 4000, // 4 seconds
-          showConfirmButton: false,
+          showConfirmButton: true,
           background: '#fbdde2',
         });
       },
@@ -165,9 +173,8 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
           title: 'Success',
           text: 'Message sent successfully!',
           icon: 'success',
-          timer: 4000, // 4 seconds
           background: '#bcf1cd',
-          showConfirmButton: false,
+          showConfirmButton: true,
         });
       },
       error: (error) => {
@@ -176,8 +183,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
           title: 'Error',
           text: 'There was an error sending the message. Please try again later.',
           icon: 'error',
-          timer: 4000, // 4 seconds
-          showConfirmButton: false,
+          showConfirmButton: true,
           background: '#fbdde2',
         });
       },

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { User } from 'src/app/core/model/user.model';
+import { UserManageService } from 'src/app/core/service/user-manage.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-user',
@@ -13,11 +16,12 @@ export class CreateUserComponent {
   phoneNumberControl = new FormControl('', Validators.required);
   passwordControl = new FormControl('', Validators.required);
   confirmPasswordControl = new FormControl('', Validators.required);
-  userGroupControl = new FormControl('', Validators.required);
+
+  submitBtnClicked: boolean = false;
 
   userSubmitForm!: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) {}
+  constructor(private _formBuilder: FormBuilder, private _userService: UserManageService) {}
 
   ngOnInit(): void {
     this.userSubmitForm = this._formBuilder.group({
@@ -27,18 +31,49 @@ export class CreateUserComponent {
       phoneNumber: this.phoneNumberControl,
       password: this.passwordControl,
       confirmPassword: this.confirmPasswordControl,
-      userGroup: this.userGroupControl,
     });
   }
 
   createUser = () => {
+    this.submitBtnClicked = true;
+
     if (this.userSubmitForm.invalid) {
       Object.values(this.userSubmitForm.controls).forEach((control) => {
         control.markAsTouched();
       });
+      this.submitBtnClicked = false;
       return;
     }
 
-    
+    const userDetails: User = {
+      email: this.emailAddressControl.value!,
+      name: this.firstNameControl.value + ' ' + this.lastNameControl.value,
+      password: this.passwordControl.value!,
+      city: this.phoneNumberControl.value!,
+    };
+
+    this._userService.createUser(userDetails).subscribe({
+      next: (response) => {
+        Swal.fire({
+          title: 'Success',
+          text: 'User created successfully!',
+          icon: 'success',
+          background: '#bcf1cd',
+          showConfirmButton: true,
+        });
+        this.submitBtnClicked = false;
+        this.userSubmitForm.reset();
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error creating the user. Please try again later.',
+          icon: 'error',
+          showConfirmButton: true,
+          background: '#fbdde2',
+        });
+        this.submitBtnClicked = false;
+      },
+    });
   };
 }

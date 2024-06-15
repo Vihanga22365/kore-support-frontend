@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 export class CreateTicketComponent implements OnInit, OnDestroy {
   createTicketSubscription$!: Subscription;
 
-  ccEmailControl = new FormControl('', Validators.required);
+  ccEmailControl = new FormControl();
   supportRequestTypeControl = new FormControl('', Validators.required);
   subjectControl = new FormControl('', Validators.required);
   descriptionControl = new FormControl('', Validators.required);
@@ -35,6 +35,10 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   createTicketSubmitBtnClicked: boolean = false;
 
   ticketSubmitForm!: FormGroup;
+
+  //chipList
+  inputValue: string = '';
+  ccEmailValues: string[] = [];
 
   constructor(private _enumService: EnumService, private _formBuilder: FormBuilder, private _ticketService: TicketManageService) {}
 
@@ -62,6 +66,21 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   files: File[] = [];
   maxFiles = 5;
 
+  addValue() {
+    const trimmedValue = this.inputValue;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (trimmedValue !== '' && !this.ccEmailValues.includes(trimmedValue) && emailPattern.test(trimmedValue)) {
+      this.ccEmailValues.push(trimmedValue);
+      this.inputValue = '';
+    }
+  }
+
+  removeValue(value: string) {
+    console.log(value);
+    this.ccEmailValues = this.ccEmailValues.filter((val) => val !== value);
+  }
+
   onSelect(event: any) {
     console.log(event);
     this.files.push(...event.addedFiles);
@@ -75,6 +94,9 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
 
   createTicket() {
     this.createTicketSubmitBtnClicked = true;
+    let ccemails = this.ccEmailValues;
+    console.log(ccemails);
+
     if (this.ticketSubmitForm.invalid) {
       Object.values(this.ticketSubmitForm.controls).forEach((control) => {
         control.markAsTouched();
@@ -82,8 +104,6 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
       this.createTicketSubmitBtnClicked = false;
       return;
     }
-
-    let ccemails = ['ablackhat894@gmail.com', 'imilamaheshan30@gmail.com', 'asamarakoon9697@gmail.com'];
 
     const formData = new FormData();
     formData.append('emailAddress', 'vihangamihirangaz1@gmail.com');
@@ -116,9 +136,8 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
             title: 'Success',
             text: 'Ticket created successfully!',
             icon: 'success',
-            timer: 4000, // 4 seconds
             background: '#bcf1cd',
-            showConfirmButton: false,
+            showConfirmButton: true,
           });
         }
       },
@@ -128,8 +147,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
           title: 'Error',
           text: 'There was an error creating the ticket. Please try again later.',
           icon: 'error',
-          timer: 4000, // 4 seconds
-          showConfirmButton: false,
+          showConfirmButton: true,
           background: '#fbdde2',
         });
       },

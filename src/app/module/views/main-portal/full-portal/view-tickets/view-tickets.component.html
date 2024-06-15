@@ -127,16 +127,23 @@
               <div class="modal-body">
                 <div class="mb-3">
                   <label class="form-label" for="attemptCount">Attempt </label>
-                  <select #attemptDropdown class="form-control form-select" name="attemptCount" id="attemptCount" (change)="getWaitingTimeByAttempt($event)">
+                  <select #attemptDropdown class="form-control form-select" name="attemptCount" id="attemptCount" (change)="getVendorWaitingTimeByAttempt($event)">
                     <option value="" selected>Select Attempt</option>
                     <option *ngFor="let i of [].constructor(maxAttempt); let index = index" [value]="index + 1">Attempt {{ index + 1 }}</option>
                   </select>
                 </div>
-                <div class="mb-3" *ngIf="finalWaitingTime">
-                  <label class="form-label" for="waitingTime">Waiting Time </label>
+                <div class="mb-3" *ngIf="finalVendorWaitingTime">
+                  <label class="form-label" for="waitingTime"> Vendor Waiting Time </label>
                   <div class="waiting-time-msg" style="text-align: center">
                     <!-- <i class="fa fa-clock"></i> -->
-                    <span style="text-transform: capitalize"> {{ finalWaitingTime.duration }}</span>
+                    <span style="text-transform: capitalize"> {{ finalVendorWaitingTime.duration }}</span>
+                  </div>
+                </div>
+                <div class="mb-3" *ngIf="finalClientWaitingTime">
+                  <label class="form-label" for="waitingTime"> Client Waiting Time </label>
+                  <div class="waiting-time-msg" style="text-align: center">
+                    <!-- <i class="fa fa-clock"></i> -->
+                    <span style="text-transform: capitalize"> {{ finalClientWaitingTime.duration }}</span>
                   </div>
                 </div>
               </div>

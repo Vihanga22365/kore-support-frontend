@@ -19,6 +19,11 @@ export interface ReopenTicket {
   ccEmailAddresses: string[];
 }
 
+export interface searchTicketResponse {
+  ticketId: string;
+  ticketNumber: string;
+}
+
 export interface CloseTicket {
   sentBy: string;
 }

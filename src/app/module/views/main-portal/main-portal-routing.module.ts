@@ -19,6 +19,7 @@ import { CreateInstallationTypeComponent } from './full-portal/installation-type
 import { ViewInstallationTypeComponent } from './full-portal/installation-type-management/view-installation-type/view-installation-type.component';
 import { CreateAffectedEnvironmentComponent } from './full-portal/affected-environment-management/create-affected-environment/create-affected-environment.component';
 import { ViewAffectedEnvironmentComponent } from './full-portal/affected-environment-management/view-affected-environment/view-affected-environment.component';
+import { AuthGuard } from 'src/app/core/guard/auth.guard';
 
 const routes: Routes = [
   {
@@ -28,30 +29,37 @@ const routes: Routes = [
       { path: '', redirectTo: '/panel/dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
+        canActivate: [AuthGuard],
         component: DashboardComponent,
       },
       {
         path: 'create-ticket',
+        canActivate: [AuthGuard],
         component: CreateTicketComponent,
       },
       {
         path: 'view-tickets',
+        canActivate: [AuthGuard],
         component: ViewTicketsComponent,
       },
       {
         path: 'create-user',
+        canActivate: [AuthGuard],
         component: CreateUserComponent,
       },
       {
         path: 'view-users',
+        canActivate: [AuthGuard],
         component: ViewUsersComponent,
       },
       {
         path: 'manage-ticket/:id',
+        canActivate: [AuthGuard],
         component: SingleTicketManageComponent,
       },
       {
         path: 'severity-management',
+        canActivate: [AuthGuard],
         component: SeverityManagementComponent,
         children: [
           {
@@ -66,6 +74,7 @@ const routes: Routes = [
       },
       {
         path: 'product-management',
+        canActivate: [AuthGuard],
         component: ProductManagementComponent,
         children: [
           {
@@ -80,6 +89,7 @@ const routes: Routes = [
       },
       {
         path: 'installation-type-management',
+        canActivate: [AuthGuard],
         component: InstallationTypeManagementComponent,
         children: [
           {
@@ -94,6 +104,7 @@ const routes: Routes = [
       },
       {
         path: 'affected-environment-management',
+        canActivate: [AuthGuard],
         component: AffectedEnvironmentManagementComponent,
         children: [
           {

@@ -6,12 +6,12 @@ import { LogPortalComponent } from './log-portal.component';
 
 const routes: Routes = [
   {
-    path: 'log-portal',
+    path: '',
     component: LogPortalComponent,
     children: [
       {
         path: '',
-        redirectTo: 'login',
+        redirectTo: '/auth/login',
         pathMatch: 'full',
       },
       {

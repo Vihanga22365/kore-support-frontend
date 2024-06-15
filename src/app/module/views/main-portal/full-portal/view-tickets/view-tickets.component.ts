@@ -19,13 +19,15 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
   getAllTicketsSubscription$!: Subscription;
   createReopenTicketSubscription$!: Subscription;
   getMaxAttemptsSubscription$!: Subscription;
-  getWaitingTimeByAttemptSubscription$!: Subscription;
+  getVendorWaitingTimeByAttemptSubscription$!: Subscription;
+  getClientWaitingTimeByAttemptSubscription$!: Subscription;
 
   ticketList: GetTicketsResponse[] = [];
   reopenTicketId!: number;
   waitingTicketId!: number;
   maxAttempt!: number;
-  finalWaitingTime!: WaitingTimeResponse | null;
+  finalVendorWaitingTime!: WaitingTimeResponse | null;
+  finalClientWaitingTime!: WaitingTimeResponse | null;
 
   reopenSubmitBtnClicked: boolean = false;
 
@@ -77,9 +79,8 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
           title: 'Success',
           text: 'Ticket reopen successfully!',
           icon: 'success',
-          timer: 4000, // 4 seconds
           background: '#bcf1cd',
-          showConfirmButton: false,
+          showConfirmButton: true,
         });
       },
       error: (error) => {
@@ -88,8 +89,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
           title: 'Error',
           text: 'There was an error reopening the ticketss. Please try again later.',
           icon: 'error',
-          timer: 4000, // 4 seconds
-          showConfirmButton: false,
+          showConfirmButton: true,
           background: '#fbdde2',
         });
       },
@@ -113,7 +113,8 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
 
   waitingTime = (waitingTicketId: number) => {
     this.attemptDropdown.nativeElement.value = '';
-    this.finalWaitingTime = null;
+    this.finalVendorWaitingTime = null;
+    this.finalClientWaitingTime = null;
     this.waitingTicketId = waitingTicketId;
     this.getMaxAttemptsSubscription$ = this._ticketManageService.getTicketMaxAttempts(this.waitingTicketId).subscribe({
       next: (response) => {
@@ -125,12 +126,26 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
     });
   };
 
-  getWaitingTimeByAttempt = (event: Event) => {
-    this.finalWaitingTime = null;
+  getVendorWaitingTimeByAttempt = (event: Event) => {
+    this.finalVendorWaitingTime = null;
+    this.finalClientWaitingTime = null;
     let attempt = (event.target as HTMLTextAreaElement).value;
-    this.getWaitingTimeByAttemptSubscription$ = this._ticketManageService.getWaitingTimeByAttempt(this.waitingTicketId, attempt).subscribe({
+    this.getVendorWaitingTimeByAttemptSubscription$ = this._ticketManageService.getVendorWaitingTimeByAttempt(this.waitingTicketId, attempt).subscribe({
       next: (response) => {
-        this.finalWaitingTime = response;
+        this.finalVendorWaitingTime = response;
+        this.getClientWaitingTimeByAttempt(this.waitingTicketId, attempt);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  getClientWaitingTimeByAttempt = (ticketId: number, attempt: string) => {
+    this.getClientWaitingTimeByAttemptSubscription$ = this._ticketManageService.getClientWaitingTimeByAttempt(this.waitingTicketId, attempt).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.finalClientWaitingTime = response;
       },
       error: (error) => {
         console.log(error);
@@ -168,6 +183,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
     this.getAllTicketsSubscription$?.unsubscribe();
     this.createReopenTicketSubscription$?.unsubscribe();
     this.getMaxAttemptsSubscription$?.unsubscribe();
-    this.getWaitingTimeByAttemptSubscription$?.unsubscribe();
+    this.getVendorWaitingTimeByAttemptSubscription$?.unsubscribe();
+    this.getClientWaitingTimeByAttemptSubscription$?.unsubscribe();
   }
 }

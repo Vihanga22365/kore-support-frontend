@@ -5,9 +5,10 @@ import { LogPortalRoutingModule } from './log-portal-routing.module';
 import { LogPortalComponent } from './log-portal.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [LogPortalComponent, LoginComponent, RegisterComponent],
-  imports: [CommonModule, LogPortalRoutingModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LogPortalRoutingModule],
 })
 export class LogPortalModule {}

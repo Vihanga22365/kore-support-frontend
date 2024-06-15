@@ -57,7 +57,7 @@
 
                   <div class="mb-3">
                     <label class="form-label" for="phoneNumber">Phone Number</label>
-                    <input [formControl]="phoneNumberControl" type="email" class="form-control" id="phoneNumber" placeholder="Enter your phone number" />
+                    <input [formControl]="phoneNumberControl" type="text" class="form-control" id="phoneNumber" placeholder="Enter your phone number" />
                     <div class="error-msg" *ngIf="phoneNumberControl.touched && phoneNumberControl.invalid">
                       <i class="fa fa-times-circle"></i>
                       Please enter phone number
@@ -67,38 +67,31 @@
                   <div class="mb-3">
                     <label class="form-label" for="password">Password</label>
                     <input [formControl]="passwordControl" type="password" class="form-control" id="password" placeholder="Enter your password" />
-                    <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid">
+                    <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && !confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
                       Please enter password
                     </div>
-                  </div>
-
-                  <div class="mb-3">
-                    <label class="form-label" for="confirmPassword">Confirm</label>
-                    <input [formControl]="confirmPasswordControl" type="password" class="form-control" id="confirmPassword" placeholder="Enter your password again" />
-                    <div class="error-msg" *ngIf="confirmPasswordControl.touched && confirmPasswordControl.invalid">
+                    <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
-                      Please enter confirm password
+                      Password not matched
                     </div>
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="userGroup">User Group</label>
-                    <select [formControl]="userGroupControl" class="form-control form-select" name="userGroup" id="userGroup">
-                      <option value="" selected>Select User Group</option>
-                      <option value="Group1">Group 1</option>
-                      <option value="Group2">Group 2</option>
-                      <option value="Group3">Group 3</option>
-                      <option value="Group4">Group 4</option>
-                    </select>
-                    <div class="error-msg" *ngIf="userGroupControl.touched && userGroupControl.invalid">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <input [formControl]="confirmPasswordControl" type="password" class="form-control" id="confirmPassword" placeholder="Enter your password again" />
+                    <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && !confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
-                      Please select user group
+                      Please enter confirm password
+                    </div>
+                    <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && confirmPasswordControl.errors['notMatch']">
+                      <i class="fa fa-times-circle"></i>
+                      Password not matched
                     </div>
                   </div>
 
                   <div class="mt-4">
-                    <button type="submit" class="btn btn-primary w-md">Submit</button>
+                    <button type="submit" class="btn btn-primary w-md" [disabled]="submitBtnClicked">Submit</button>
                   </div>
                 </form>
               </div>
