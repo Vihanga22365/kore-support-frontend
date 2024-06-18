@@ -39,3 +39,9 @@ export interface Status {
   enumName: string;
   displayName: string;
 }
+
+export interface UserRoles {
+  id: number;
+  enumName: string;
+  displayName: string;
+}

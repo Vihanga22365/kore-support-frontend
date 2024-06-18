@@ -28,6 +28,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
   clientStatus: Status[] = [];
   userType!: string;
   emailAddress: string = 'vmihirangaz@virtusa.com';
+  ccEmails: string[] = [];
 
   sendMsgSubmitBtnClicked: boolean = false;
   changeStatusSubmitBtnClicked: boolean = false;
@@ -68,6 +69,10 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
       status: this.statusControl,
     });
     this.getAllMessages();
+
+    setInterval(() => {
+      this.getAllMessages();
+    }, 60000); // 1 minute in milliseconds
   }
 
   ngAfterViewChecked() {
@@ -147,7 +152,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
       return;
     }
 
-    let ccemails = ['ablackhat894@gmail.com', 'imilamaheshan30@gmail.com', 'asamarakoon9697@gmail.com'];
+    let ccemails = this.ccEmails;
 
     const formData = new FormData();
     formData.append('sentBy', this.emailAddress);
@@ -210,6 +215,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
         // console.log(response);
         if (response) {
           this.ticketDetails = response;
+          this.ccEmails = response.ccEmailAddresses.map((email) => email.replace(/[\[\],"]/g, ''));
         }
       },
       error: (error) => {

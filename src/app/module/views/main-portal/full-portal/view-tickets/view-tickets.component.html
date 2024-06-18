@@ -17,11 +17,36 @@
     </div>
   </div>
   <!-- end page title -->
-
   <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-body">
+          <div class="col-sm-12" style="text-align: right; padding-bottom: 1%">
+            <!-- <div class="row"> -->
+            <button class="btn btn-primary" [ngClass]="{ 'btn-primary': fetchTicketType != 'normal', 'btn-secondary': fetchTicketType == 'normal' }" (click)="getAllTicketsData('normal')" style="margin-right: 3px">View My Ticket</button>
+            <button class="btn btn-primary" style="margin-right: 3px" [ngClass]="{ 'btn-primary': fetchTicketType != 'all', 'btn-secondary': fetchTicketType == 'all' }" (click)="getAllTicketsData('all')" *ngIf="userRole == 'ADMIN'">
+              View All Ticket
+            </button>
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-primary dropdown-toggle"
+                [ngClass]="{
+                  'btn-primary': fetchTicketType != 'SEVERITY_1' && fetchTicketType != 'SEVERITY_2' && fetchTicketType != 'SEVERITY_3' && fetchTicketType != 'SEVERITY_4',
+                  'btn-secondary': fetchTicketType == 'SEVERITY_1' || fetchTicketType == 'SEVERITY_2' || fetchTicketType == 'SEVERITY_3' || fetchTicketType == 'SEVERITY_4'
+                }"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                View Tickets By Severity <i class="mdi mdi-chevron-down"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" style="cursor: pointer" *ngFor="let severityLevel of severityDropDown" (click)="getAllTicketsData(severityLevel)">{{ getSeverityDisplayName(severityLevel) }}</a>
+              </div>
+            </div>
+            <!-- </div> -->
+          </div>
           <table class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%">
             <thead>
               <tr>
@@ -52,6 +77,7 @@
                 </td>
                 <td align="center">
                   <button
+                    *ngIf="userType == 'client'"
                     type="button"
                     [ngClass]="{ 'btn-warning': getStatusDisplayName(ticket.clientStatus) == 'Closed', 'btn-secondary': getStatusDisplayName(ticket.clientStatus) != 'Closed' }"
                     class="btn btn-warning btn-sm waves-effect waves-light"
@@ -62,8 +88,38 @@
                   >
                     Reopen
                   </button>
+                  <button
+                    *ngIf="userType == 'vendor'"
+                    type="button"
+                    [ngClass]="{ 'btn-warning': getStatusDisplayName(ticket.clientStatus) == 'Closed', 'btn-secondary': getStatusDisplayName(ticket.clientStatus) != 'Closed' }"
+                    class="btn btn-warning btn-sm waves-effect waves-light"
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                    [disabled]="getStatusDisplayName(ticket.vendorStatus) == 'Closed' ? false : true"
+                    (click)="reopenTicket(ticket.id)"
+                  >
+                    Reopen
+                  </button>
                 </td>
-                <td>{{ getStatusDisplayName(ticket.clientStatus) }}</td>
+
+                <td align="center">
+                  <span
+                    [class.open-status]="ticket.clientStatus == 'OPEN'"
+                    [class.close-status]="ticket.clientStatus == 'CLOSED'"
+                    [class.solve-status]="ticket.clientStatus == 'SOLVED'"
+                    [class.waiting-status]="ticket.clientStatus == 'AWAITING_REPLY'"
+                    *ngIf="userType == 'client'"
+                    >{{ getStatusDisplayName(ticket.clientStatus) }}</span
+                  >
+                  <span
+                    [class.open-status]="ticket.vendorStatus == 'OPEN'"
+                    [class.close-status]="ticket.vendorStatus == 'CLOSED'"
+                    [class.solve-status]="ticket.vendorStatus == 'SOLVED'"
+                    [class.waiting-status]="ticket.vendorStatus == 'AWAITING_REPLY'"
+                    *ngIf="userType == 'vendor'"
+                    >{{ getStatusDisplayName(ticket.vendorStatus) }}</span
+                  >
+                </td>
               </tr>
             </tbody>
           </table>

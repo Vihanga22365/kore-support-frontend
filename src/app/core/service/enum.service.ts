@@ -90,4 +90,14 @@ export class EnumService {
       { id: 2, enumName: MessageTypeEnum.VENDOR, displayName: 'Vendor' },
     ];
   }
+
+  getUserRoles(): any[] {
+    return [
+      { id: 1, enumName: 'ADMIN', displayName: 'Admin' },
+      { id: 2, enumName: 'LEVEL-1', displayName: 'Level-1' },
+      { id: 3, enumName: 'LEVEL-2', displayName: 'Level-2' },
+      { id: 4, enumName: 'LEVEL-3', displayName: 'Level-3' },
+      { id: 5, enumName: 'LEVEL-4', displayName: 'Level-4' },
+    ];
+  }
 }

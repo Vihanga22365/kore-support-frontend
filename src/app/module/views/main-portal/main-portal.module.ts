@@ -35,6 +35,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
+import { AssignRoleComponent } from './full-portal/assign-role/assign-role.component';
+import { AssignProductGroupComponent } from './full-portal/assign-product-group/assign-product-group.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +63,8 @@ import { MatIconModule } from '@angular/material/icon';
     ViewInstallationTypeComponent,
     CreateAffectedEnvironmentComponent,
     ViewAffectedEnvironmentComponent,
+    AssignRoleComponent,
+    AssignProductGroupComponent,
   ],
   imports: [
     CommonModule,

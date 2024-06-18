@@ -23,4 +23,40 @@ export interface LogInResponse {
   refreshToken?: string;
   expirationTime?: string;
   role?: string;
+  productGroup?: string;
+  email?: string;
+}
+
+export interface FetchUsersMainResponse {
+  statusCode: number;
+  message: string;
+  ourUsersList: FetchUsersSubResponse[];
+}
+
+export interface FetchUsersSubResponse {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+  city: string;
+  role: string;
+  productGroup?: any;
+  enabled: boolean;
+  accountNonLocked: boolean;
+  accountNonExpired: boolean;
+  credentialsNonExpired: boolean;
+  username: string;
+  authorities: Authority[];
+}
+
+export interface Authority {
+  authority: string;
+}
+
+export interface UserRoleDetails {
+  role: string;
+}
+
+export interface UserProductGroupDetails {
+  productGroup: string;
 }

@@ -4,6 +4,9 @@ import { isPlatformBrowser } from '@angular/common';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
+import { Subscription } from 'rxjs';
+import { ChartService } from 'src/app/core/service/chart.service';
+import { TimeSeverityChartResponse } from 'src/app/core/model/chart.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,18 +14,30 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-  private root!: am5.Root;
+  private rootMain!: am5.Root;
   startMonth!: string;
   endMonth!: string;
   startDate!: string;
   endDate!: string;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private zone: NgZone) {}
+  chart!: am5xy.XYChart;
+  root!: am5.Root;
+
+  chart1!: am5xy.XYChart;
+  rootChart1!: am5.Root;
+
+  ticketsWithSeverityData: TimeSeverityChartResponse[] = [];
+
+  getTicketsWithSeveritySubscription$!: Subscription;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private zone: NgZone, private _chartService: ChartService) {
+    this.ticketsWithSeverityData = [];
+  }
 
   ngOnInit() {
     let date = new Date();
     this.endMonth = date.toISOString().slice(0, 7);
-    date.setMonth(date.getMonth() - 2);
+    date.setMonth(date.getMonth() - 0);
     this.startMonth = date.toISOString().slice(0, 7);
 
     let today = new Date();
@@ -32,6 +47,7 @@ export class DashboardComponent {
 
     this.startDate = `${oneMonthAgo.getFullYear()}-${('0' + (oneMonthAgo.getMonth() + 1)).slice(-2)}-${('0' + oneMonthAgo.getDate()).slice(-2)}`;
     this.endDate = `${today.getFullYear()}-${('0' + (today.getMonth() + 1)).slice(-2)}-${('0' + today.getDate()).slice(-2)}`;
+    this.getTicketsWithSeverity();
   }
 
   // Run the function only in the browser
@@ -43,6 +59,18 @@ export class DashboardComponent {
     }
   }
 
+  getTicketsWithSeverity() {
+    this.getTicketsWithSeveritySubscription$ = this._chartService.getTicketsWithSeverity(this.startMonth, this.endMonth).subscribe({
+      next: (response) => {
+        this.ticketsWithSeverityData = response;
+        this.updateSeverityChart(response);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
   ngAfterViewInit() {
     // Chart code goes in here
     this.browserOnly(() => {
@@ -51,155 +79,7 @@ export class DashboardComponent {
       /* Chart 1 code */
       /* Chart 1 code */
       /* Chart 1 code */
-
-      let root = am5.Root.new('chartdiv');
-
-      root.setThemes([am5themes_Animated.new(root)]);
-      root._logo!.dispose();
-
-      let chart = root.container.children.push(
-        am5xy.XYChart.new(root, {
-          panX: false,
-          panY: false,
-          paddingLeft: 0,
-          wheelX: 'panX',
-          wheelY: 'zoomX',
-          layout: root.verticalLayout,
-        })
-      );
-
-      chart.set(
-        'scrollbarX',
-        am5.Scrollbar.new(root, {
-          orientation: 'horizontal',
-        })
-      );
-
-      let legend = chart.children.push(
-        am5.Legend.new(root, {
-          centerX: am5.p50,
-          x: am5.p50,
-        })
-      );
-
-      let data = [
-        {
-          year: '2024 Jan',
-          severity1: 3,
-          severity2: 5,
-          severity3: 6,
-          severity4: 2,
-        },
-        {
-          year: '2024 Feb',
-          severity1: 10,
-          severity2: 7,
-          severity3: 8,
-          severity4: 5,
-        },
-        {
-          year: '2024 Mar',
-          severity1: 5,
-          severity2: 8,
-          severity3: 3,
-          severity4: 6,
-        },
-        {
-          year: '2024 Apr',
-          severity1: 3,
-          severity2: 5,
-          severity3: 6,
-          severity4: 2,
-        },
-        {
-          year: '2024 May',
-          severity1: 10,
-          severity2: 7,
-          severity3: 8,
-          severity4: 5,
-        },
-        {
-          year: '2024 June',
-          severity1: 5,
-          severity2: 8,
-          severity3: 3,
-          severity4: 6,
-        },
-      ];
-
-      let xRenderer = am5xy.AxisRendererX.new(root, {
-        cellStartLocation: 0.1,
-        cellEndLocation: 0.9,
-        minorGridEnabled: true,
-      });
-
-      let xAxis = chart.xAxes.push(
-        am5xy.CategoryAxis.new(root, {
-          categoryField: 'year',
-          renderer: xRenderer,
-          tooltip: am5.Tooltip.new(root, {}),
-        })
-      );
-
-      xRenderer.grid.template.setAll({
-        location: 1,
-      });
-
-      xAxis.data.setAll(data);
-
-      let yAxis = chart.yAxes.push(
-        am5xy.ValueAxis.new(root, {
-          renderer: am5xy.AxisRendererY.new(root, {
-            strokeOpacity: 0.1,
-          }),
-        })
-      );
-
-      function makeSeries(name: string, fieldName: string) {
-        let series = chart.series.push(
-          am5xy.ColumnSeries.new(root, {
-            name: name,
-            xAxis: xAxis,
-            yAxis: yAxis,
-            valueYField: fieldName,
-            categoryXField: 'year',
-          })
-        );
-
-        series.columns.template.setAll({
-          tooltipText: '{name} - {categoryX} : {valueY}',
-          width: am5.percent(90),
-          tooltipY: 0,
-          strokeOpacity: 0,
-        });
-
-        series.data.setAll(data);
-
-        series.appear();
-
-        series.bullets.push(function () {
-          return am5.Bullet.new(root, {
-            locationY: 0,
-            sprite: am5.Label.new(root, {
-              text: '{valueY}',
-              fill: root.interfaceColors.get('alternativeText'),
-              centerY: 0,
-              centerX: am5.p50,
-              populateText: true,
-            }),
-          });
-        });
-
-        legend.data.push(series);
-      }
-
-      makeSeries('Severity 1', 'severity1');
-      makeSeries('Severity 2', 'severity2');
-      makeSeries('Severity 3', 'severity3');
-      makeSeries('Severity 4', 'severity4');
-
-      chart.appear(1000, 100);
-
+      this.updateSeverityChart(this.ticketsWithSeverityData);
       /* Chart 1 code */
       /* Chart 1 code */
       /* Chart 1 code */
@@ -211,18 +91,12 @@ export class DashboardComponent {
       /* Chart 2 code */
       /* Chart 2 code */
       /* Chart 2 code */
-      // Create root element
-      // Create root element
-      // https://www.amcharts.com/docs/v5/getting-started/#Root_element
+
       let rootChart1 = am5.Root.new('chartdiv1');
 
-      // Set themes
-      // https://www.amcharts.com/docs/v5/concepts/themes/
       rootChart1.setThemes([am5themes_Animated.new(rootChart1)]);
       rootChart1._logo!.dispose();
 
-      // Create chart
-      // https://www.amcharts.com/docs/v5/charts/xy-chart/
       let chart1 = rootChart1.container.children.push(
         am5xy.XYChart.new(rootChart1, {
           panX: false,
@@ -300,8 +174,6 @@ export class DashboardComponent {
         })
       );
 
-      // Add legend
-      // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
       let legend1 = chart1.children.push(
         am5.Legend.new(rootChart1, {
           centerX: am5.p50,
@@ -309,8 +181,6 @@ export class DashboardComponent {
         })
       );
 
-      // Add series
-      // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
       function makeSeries1(name: string, fieldName: string) {
         let series = chart1.series.push(
           am5xy.ColumnSeries.new(rootChart1, {
@@ -329,8 +199,6 @@ export class DashboardComponent {
         });
         series.data.setAll(data1);
 
-        // Make stuff animate on load
-        // https://www.amcharts.com/docs/v5/concepts/animations/
         series.appear();
 
         series.bullets.push(function () {
@@ -351,8 +219,6 @@ export class DashboardComponent {
       makeSeries1('Client Waiting Time', 'clientWaitingTime');
       makeSeries1('Vendor Waiting Time', 'vendorWaitingTime');
 
-      // Make stuff animate on load
-      // https://www.amcharts.com/docs/v5/concepts/animations/
       chart1.appear(1000, 100);
 
       /* Chart 2 code */
@@ -363,12 +229,129 @@ export class DashboardComponent {
     });
   }
 
+  updateWaitingTimeChart = () => {};
+
+  updateSeverityChart = (mainChartData: TimeSeverityChartResponse[]) => {
+    let root = this.root;
+    if (this.root) {
+      root = this.root;
+      root.dispose();
+    }
+    this.root = am5.Root.new('chartdiv');
+    root = this.root;
+
+    root.setThemes([am5themes_Animated.new(root)]);
+    root._logo!.dispose();
+
+    this.chart = root.container.children.push(
+      am5xy.XYChart.new(root, {
+        panX: false,
+        panY: false,
+        paddingLeft: 0,
+        wheelX: 'panX',
+        wheelY: 'zoomX',
+        layout: root.verticalLayout,
+      })
+    );
+
+    this.chart.set(
+      'scrollbarX',
+      am5.Scrollbar.new(root, {
+        orientation: 'horizontal',
+      })
+    );
+
+    let legend = this.chart.children.push(
+      am5.Legend.new(root, {
+        centerX: am5.p50,
+        x: am5.p50,
+      })
+    );
+
+    console.log(mainChartData);
+
+    let xRenderer = am5xy.AxisRendererX.new(root, {
+      cellStartLocation: 0.1,
+      cellEndLocation: 0.9,
+      minorGridEnabled: true,
+    });
+
+    let xAxis = this.chart.xAxes.push(
+      am5xy.CategoryAxis.new(root, {
+        categoryField: 'year',
+        renderer: xRenderer,
+        tooltip: am5.Tooltip.new(root, {}),
+      })
+    );
+
+    xRenderer.grid.template.setAll({
+      location: 1,
+    });
+
+    xAxis.data.setAll(mainChartData);
+
+    let yAxis = this.chart.yAxes.push(
+      am5xy.ValueAxis.new(root, {
+        renderer: am5xy.AxisRendererY.new(root, {
+          strokeOpacity: 0.1,
+        }),
+      })
+    );
+
+    const makeSeries = (name: string, fieldName: string) => {
+      let series = this.chart.series.push(
+        am5xy.ColumnSeries.new(root, {
+          name: name,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          valueYField: fieldName,
+          categoryXField: 'year',
+        })
+      );
+
+      series.columns.template.setAll({
+        tooltipText: '{name} - {categoryX} : {valueY}',
+        width: am5.percent(90),
+        tooltipY: 0,
+        strokeOpacity: 0,
+      });
+
+      series.data.setAll(mainChartData);
+
+      series.appear();
+
+      series.bullets.push(function () {
+        return am5.Bullet.new(root, {
+          locationY: 0,
+          sprite: am5.Label.new(root, {
+            text: '{valueY}',
+            fill: root.interfaceColors.get('alternativeText'),
+            centerY: 0,
+            centerX: am5.p50,
+            populateText: true,
+          }),
+        });
+      });
+
+      legend.data.push(series);
+    };
+
+    makeSeries('Severity 1', 'severity1');
+    makeSeries('Severity 2', 'severity2');
+    makeSeries('Severity 3', 'severity3');
+    makeSeries('Severity 4', 'severity4');
+
+    this.chart.appear(1000, 100);
+  };
+
   ngOnDestroy() {
     // Clean up chart when the component is removed
     this.browserOnly(() => {
-      if (this.root) {
-        this.root.dispose();
+      if (this.rootMain) {
+        this.rootMain.dispose();
       }
     });
+
+    this.getTicketsWithSeveritySubscription$?.unsubscribe();
   }
 }

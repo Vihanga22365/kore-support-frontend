@@ -82,12 +82,13 @@
     <div class="col-xl-6 col-sm-12">
       <div class="card">
         <div class="card-body">
+          <h4 class="card-title mb-4">Tickets With Severity</h4>
           <div class="mb-0">
             <!-- <label>Date Range</label> -->
             <div class="col-sm-12">
               <div class="input-daterange input-group" id="datepicker4" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container="#datepicker4">
-                <input [(ngModel)]="startMonth" type="month" class="form-control" name="start" placeholder="Start date" />
-                <input [(ngModel)]="endMonth" type="month" class="form-control" name="end" placeholder="End date" />
+                <input (change)="getTicketsWithSeverity()" [(ngModel)]="startMonth" type="month" class="form-control" name="start" placeholder="Start date" />
+                <input (change)="getTicketsWithSeverity()" [(ngModel)]="endMonth" type="month" class="form-control" name="end" placeholder="End date" />
               </div>
             </div>
           </div>
@@ -98,6 +99,7 @@
     <div class="col-xl-6 col-sm-12">
       <div class="card">
         <div class="card-body">
+          <h4 class="card-title mb-4">Tickets With Waiting Time</h4>
           <div class="mb-0">
             <!-- <label>Date Range</label> -->
             <div class="col-sm-12">

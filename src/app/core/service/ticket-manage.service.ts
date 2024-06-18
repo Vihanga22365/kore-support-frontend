@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'; // Import the 'HttpClient' class
 import { CloseTicket, GetMessageResponse, GetTicketsResponse, ReopenTicket, Ticket, TicketResponse, WaitingTimeResponse } from '../model/ticket.model';
 import { environment } from 'src/environments/environments';
@@ -8,14 +8,38 @@ import { of } from 'rxjs';
   providedIn: 'root',
 })
 export class TicketManageService {
+  userType!: string;
+
   constructor(private _httpClient: HttpClient) {}
 
   createTicket = (ticket: FormData) => {
     return this._httpClient.post<TicketResponse>(environment.TICKET_URL, ticket);
   };
 
-  getAllTickets = () => {
-    return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/general/getAll`);
+  getAllTickets = (fetchType: string) => {
+    if (fetchType == 'normal') {
+      const user_email = localStorage.getItem('user_email');
+
+      if (user_email!.endsWith('@virtusa.com')) {
+        this.userType = 'client';
+      } else if (user_email!.endsWith('@kore.ai')) {
+        this.userType = 'vendor';
+      } else {
+        this.userType = 'client';
+      }
+
+      if (this.userType === 'client') {
+        return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/user/getAllTicketsByUser`);
+      } else if (this.userType === 'vendor') {
+        return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/getAllKore`);
+      }
+    } else if (fetchType == 'all') {
+      return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/general/getAll`);
+    } else {
+      return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/severity/${fetchType}`);
+    }
+
+    return of([]);
   };
 
   getSingleTicket = (ticketNumber: string) => {

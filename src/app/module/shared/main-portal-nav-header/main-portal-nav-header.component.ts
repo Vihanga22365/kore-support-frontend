@@ -71,6 +71,9 @@ export class MainPortalNavHeaderComponent {
 
   logOutUser = () => {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_email');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('user_product_group');
 
     if (localStorage.getItem('auth_token') === null) {
       this.router.navigate(['/auth/login']);

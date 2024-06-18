@@ -28,6 +28,10 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
   maxAttempt!: number;
   finalVendorWaitingTime!: WaitingTimeResponse | null;
   finalClientWaitingTime!: WaitingTimeResponse | null;
+  userType!: string;
+  userRole!: string;
+  fetchTicketType!: string;
+  severityDropDown!: string[];
 
   reopenSubmitBtnClicked: boolean = false;
 
@@ -48,7 +52,9 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getAllTicketsData();
+    this.getAllTicketsData('normal');
+    this.checkClientOrVendor();
+    this.checkUserRole();
   }
 
   reopenTicketDetailsSubmit = () => {
@@ -71,7 +77,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
 
     this.createReopenTicketSubscription$ = this._ticketManageService.createReopenTicket(reopenTicket).subscribe({
       next: (response) => {
-        this.getAllTicketsData();
+        this.getAllTicketsData('normal');
         this.reopenTicketSubmitForm.reset();
         this.reopenSubmitBtnClicked = false;
         this.closeButton.nativeElement.click();
@@ -96,8 +102,39 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
     });
   };
 
-  getAllTicketsData = () => {
-    this.getAllTicketsSubscription$ = this._ticketManageService.getAllTickets().subscribe({
+  checkClientOrVendor = () => {
+    const user_email = localStorage.getItem('user_email');
+
+    if (user_email!.endsWith('@virtusa.com')) {
+      this.userType = 'client';
+    } else if (user_email!.endsWith('@kore.ai')) {
+      this.userType = 'vendor';
+    } else {
+      this.userType = 'client';
+    }
+  };
+
+  checkUserRole = () => {
+    const user_role = localStorage.getItem('user_role');
+    this.userRole = user_role!;
+
+    if (user_role == 'LEVEL-4') {
+      this.severityDropDown = [SeverityEnum.SEVERITY_1, SeverityEnum.SEVERITY_2, SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
+    } else if (user_role == 'LEVEL-3') {
+      this.severityDropDown = [SeverityEnum.SEVERITY_2, SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
+    } else if (user_role == 'LEVEL-2') {
+      this.severityDropDown = [SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
+    } else if (user_role == 'LEVEL-1') {
+      this.severityDropDown = [SeverityEnum.SEVERITY_4];
+    } else if (user_role == 'ADMIN') {
+      this.severityDropDown = [SeverityEnum.SEVERITY_1, SeverityEnum.SEVERITY_2, SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
+    }
+  };
+
+  getAllTicketsData = (fetchType: string) => {
+    console.log(fetchType);
+    this.fetchTicketType = fetchType;
+    this.getAllTicketsSubscription$ = this._ticketManageService.getAllTickets(fetchType).subscribe({
       next: (response) => {
         this.ticketList = response;
       },

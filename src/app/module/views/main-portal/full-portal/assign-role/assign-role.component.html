@@ -3,12 +3,12 @@
   <div class="row">
     <div class="col-sm-6">
       <div class="page-title-box">
-        <h4>View Users</h4>
+        <h4>Assign Role</h4>
         <ol class="breadcrumb m-0">
           <li class="breadcrumb-item">
             <a routerLink="/panel/dashboard">Dashboard</a>
           </li>
-          <li class="breadcrumb-item active">View Users</li>
+          <li class="breadcrumb-item active">Assign Role</li>
         </ol>
       </div>
     </div>
@@ -27,8 +27,8 @@
               <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th style="text-align: left">Phone Number</th>
-                <th style="text-align: center">Status</th>
+                <th style="text-align: left">Role</th>
+                <th style="text-align: center"></th>
               </tr>
             </thead>
 
@@ -38,9 +38,22 @@
                   <a href="">{{ user.name }}</a>
                 </td>
                 <td>{{ user.email }}</td>
-                <td style="text-align: left">{{ user.city }}</td>
-                <td align="center" style="text-align: center">
-                  <button type="button" [ngClass]="{ 'btn-success': user.enabled, 'btn-danger': !user.enabled }" style="text-align: center; padding: 10px" class="btn waves-effect waves-light"></button>
+                <td style="text-align: left">{{ user.role }}</td>
+                <td align="center" style="width: 20%">
+                  <span style="display: flex; align-items: center">
+                    <select [formControl]="userRoleControl" class="form-control form-select" name="userRole" id="userRole" style="width: 100%">
+                      <option value="" selected>Select Role</option>
+                      <option *ngFor="let role of userRoles" [value]="role.enumName">{{ role.displayName }}</option>
+                    </select>
+
+                    <button [disabled]="userRoleUpdateBtnIsDisable" (click)="updateRole(user.id)" style="width: max-content; margin-left: 3px" type="button" class="btn btn-info waves-effect waves-light">
+                      <i class="mdi mdi-check"></i>
+                    </button>
+                  </span>
+                  <div class="error-msg" *ngIf="userRoleControl.touched && userRoleControl.invalid">
+                    <i class="fa fa-times-circle"></i>
+                    Please select a role
+                  </div>
                 </td>
               </tr>
             </tbody>

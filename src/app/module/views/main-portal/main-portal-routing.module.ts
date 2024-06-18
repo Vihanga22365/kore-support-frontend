@@ -20,6 +20,8 @@ import { ViewInstallationTypeComponent } from './full-portal/installation-type-m
 import { CreateAffectedEnvironmentComponent } from './full-portal/affected-environment-management/create-affected-environment/create-affected-environment.component';
 import { ViewAffectedEnvironmentComponent } from './full-portal/affected-environment-management/view-affected-environment/view-affected-environment.component';
 import { AuthGuard } from 'src/app/core/guard/auth.guard';
+import { AssignRoleComponent } from './full-portal/assign-role/assign-role.component';
+import { AssignProductGroupComponent } from './full-portal/assign-product-group/assign-product-group.component';
 
 const routes: Routes = [
   {
@@ -56,6 +58,16 @@ const routes: Routes = [
         path: 'manage-ticket/:id',
         canActivate: [AuthGuard],
         component: SingleTicketManageComponent,
+      },
+      {
+        path: 'assign-role',
+        canActivate: [AuthGuard],
+        component: AssignRoleComponent,
+      },
+      {
+        path: 'assign-product-group',
+        canActivate: [AuthGuard],
+        component: AssignProductGroupComponent,
       },
       {
         path: 'severity-management',

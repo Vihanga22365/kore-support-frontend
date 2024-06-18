@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 export class CreateUserComponent {
   firstNameControl = new FormControl('', Validators.required);
   lastNameControl = new FormControl('', Validators.required);
-  emailAddressControl = new FormControl('', Validators.required);
+  emailAddressControl = new FormControl('', [Validators.required, Validators.pattern(/^[a-z0-9._%+-]+@(virtusa\.com|kore\.ai)$/i)]);
   phoneNumberControl = new FormControl('', Validators.required);
   passwordControl = new FormControl('', Validators.required);
   confirmPasswordControl = new FormControl('', Validators.required);
@@ -41,6 +41,13 @@ export class CreateUserComponent {
       Object.values(this.userSubmitForm.controls).forEach((control) => {
         control.markAsTouched();
       });
+      this.submitBtnClicked = false;
+      return;
+    }
+
+    if (this.passwordControl.value !== this.confirmPasswordControl.value) {
+      this.passwordControl.setErrors({ notMatch: true });
+      this.confirmPasswordControl.setErrors({ notMatch: true });
       this.submitBtnClicked = false;
       return;
     }

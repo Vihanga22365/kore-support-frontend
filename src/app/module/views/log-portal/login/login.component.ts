@@ -58,6 +58,15 @@ export class LoginComponent implements OnInit {
           });
 
           localStorage.setItem('auth_token', response.token!);
+          localStorage.setItem('user_email', response.email!);
+
+          if (response.role) {
+            localStorage.setItem('user_role', response.role);
+          }
+
+          if (response.productGroup) {
+            localStorage.setItem('user_product_group', response.productGroup);
+          }
 
           if (localStorage.getItem('auth_token') !== null) {
             this.router.navigate(['/panel/dashboard']);
@@ -65,7 +74,7 @@ export class LoginComponent implements OnInit {
         } else if (response.statusCode == 500) {
           this.loggedBtnClicked = false;
           Swal.fire({
-            title: 'Error',
+            title: 'Invalid Credentials',
             text: 'Email or password is incorrect. Please try again.',
             icon: 'error',
             showConfirmButton: true,

@@ -3,12 +3,12 @@
   <div class="row">
     <div class="col-sm-6">
       <div class="page-title-box">
-        <h4>View Users</h4>
+        <h4>Assign Product Group</h4>
         <ol class="breadcrumb m-0">
           <li class="breadcrumb-item">
             <a routerLink="/panel/dashboard">Dashboard</a>
           </li>
-          <li class="breadcrumb-item active">View Users</li>
+          <li class="breadcrumb-item active">Assign Product Group</li>
         </ol>
       </div>
     </div>
@@ -27,8 +27,9 @@
               <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th style="text-align: left">Phone Number</th>
-                <th style="text-align: center">Status</th>
+                <th style="text-align: left">Role</th>
+                <th style="text-align: left">Product Group</th>
+                <th style="text-align: center"></th>
               </tr>
             </thead>
 
@@ -38,9 +39,22 @@
                   <a href="">{{ user.name }}</a>
                 </td>
                 <td>{{ user.email }}</td>
-                <td style="text-align: left">{{ user.city }}</td>
-                <td align="center" style="text-align: center">
-                  <button type="button" [ngClass]="{ 'btn-success': user.enabled, 'btn-danger': !user.enabled }" style="text-align: center; padding: 10px" class="btn waves-effect waves-light"></button>
+                <td style="text-align: left">{{ user.role }}</td>
+                <td style="text-align: left">{{ getProductDisplayName(user.productGroup) }}</td>
+                <td align="center" style="width: 10%">
+                  <span style="display: flex; align-items: center">
+                    <select [formControl]="userProductGroupControl" class="form-control form-select" name="userProductGroup" id="userProductGroup" style="width: max-content">
+                      <option value="" selected>Select Product Group</option>
+                      <option *ngFor="let product of productGroups" [value]="product.enumName">{{ product.displayName }}</option>
+                    </select>
+                    <button [disabled]="userProductGroupUpdateBtnIsDisable" (click)="updateProductGroup(user.id)" style="width: max-content; margin-left: 3px" type="button" class="btn btn-info waves-effect waves-light">
+                      <i class="mdi mdi-check"></i>
+                    </button>
+                  </span>
+                  <div class="error-msg" *ngIf="userProductGroupControl.touched && userProductGroupControl.invalid">
+                    <i class="fa fa-times-circle"></i>
+                    Please select a product group
+                  </div>
                 </td>
               </tr>
             </tbody>
