@@ -6,6 +6,8 @@ import { EnumService } from 'src/app/core/service/enum.service';
 import { TicketManageService } from 'src/app/core/service/ticket-manage.service';
 import { SeverityEnum, SupportRequestTypeEnum } from 'src/app/core/util/enums';
 import Swal from 'sweetalert2';
+import * as ExcelJS from 'exceljs';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-view-tickets',
@@ -29,7 +31,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
   finalVendorWaitingTime!: WaitingTimeResponse | null;
   finalClientWaitingTime!: WaitingTimeResponse | null;
   userType!: string;
-  userRole!: string;
+  userRole!: string[];
   fetchTicketType!: string;
   severityDropDown!: string[];
 
@@ -114,25 +116,122 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
     }
   };
 
+  exportToExcel = () => {
+    const ticketList = this.ticketList;
+
+    console.log(ticketList);
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Tickets');
+
+    // Define columns
+    worksheet.columns = [
+      { header: 'ID', key: 'id', width: 10 },
+      { header: 'Product', key: 'product', width: 30 },
+      { header: 'Request Type', key: 'supportRequestType', width: 30 },
+      { header: 'Created At', key: 'createdAt', width: 30 },
+      { header: 'Email Address', key: 'emailAddress', width: 45 },
+      { header: 'Subject', key: 'subject', width: 70 },
+      { header: 'Severity', key: 'severity', width: 30 },
+      { header: 'Affected Environment', key: 'affectedEnvironment', width: 30 },
+      { header: 'Installation Type', key: 'installationType', width: 30 },
+      { header: 'Platform Version', key: 'platformVersion', width: 30 },
+      { header: 'Client Status', key: 'clientStatus', width: 30 },
+      { header: 'Vendor Status', key: 'vendorStatus', width: 30 },
+    ];
+
+    // Add rows from ticketList
+    this.ticketList.forEach((ticket) => {
+      worksheet.addRow(ticket);
+    });
+
+    // Set styles and formats if needed here
+
+    // Write to buffer
+    workbook.xlsx.writeBuffer().then((data) => {
+      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      FileSaver.saveAs(blob, 'ticketList.xlsx');
+    });
+  };
+
   checkUserRole = () => {
     const user_role = localStorage.getItem('user_role');
-    this.userRole = user_role!;
+    this.userRole = JSON.parse(user_role!);
 
-    if (user_role == 'LEVEL-4') {
-      this.severityDropDown = [SeverityEnum.SEVERITY_1, SeverityEnum.SEVERITY_2, SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
-    } else if (user_role == 'LEVEL-3') {
-      this.severityDropDown = [SeverityEnum.SEVERITY_2, SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
-    } else if (user_role == 'LEVEL-2') {
-      this.severityDropDown = [SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
-    } else if (user_role == 'LEVEL-1') {
-      this.severityDropDown = [SeverityEnum.SEVERITY_4];
-    } else if (user_role == 'ADMIN') {
-      this.severityDropDown = [SeverityEnum.SEVERITY_1, SeverityEnum.SEVERITY_2, SeverityEnum.SEVERITY_3, SeverityEnum.SEVERITY_4];
+    if (!this.severityDropDown) {
+      this.severityDropDown = [];
     }
+
+    if (this.userRole.includes('LEVEL-4')) {
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_1)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_1);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_2)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_2);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_3)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_3);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_4)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_4);
+      }
+    }
+
+    if (this.userRole.includes('LEVEL-3')) {
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_1)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_1);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_2)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_2);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_3)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_3);
+      }
+    }
+
+    if (this.userRole.includes('LEVEL-2')) {
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_1)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_1);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_2)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_2);
+      }
+    }
+
+    if (this.userRole.includes('LEVEL-1')) {
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_1)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_1);
+      }
+    }
+
+    if (this.userRole.includes('ADMIN')) {
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_1)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_1);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_2)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_2);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_3)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_3);
+      }
+
+      if (!this.severityDropDown.includes(SeverityEnum.SEVERITY_4)) {
+        this.severityDropDown.push(SeverityEnum.SEVERITY_4);
+      }
+    }
+
+    console.log(this.severityDropDown);
   };
 
   getAllTicketsData = (fetchType: string) => {
-    console.log(fetchType);
     this.fetchTicketType = fetchType;
     this.getAllTicketsSubscription$ = this._ticketManageService.getAllTickets(fetchType).subscribe({
       next: (response) => {

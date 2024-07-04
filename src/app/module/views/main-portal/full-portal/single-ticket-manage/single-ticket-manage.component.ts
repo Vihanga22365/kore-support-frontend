@@ -27,7 +27,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
   messageList: GetMessageResponse[] = [];
   clientStatus: Status[] = [];
   userType!: string;
-  emailAddress: string = 'vmihirangaz@virtusa.com';
+  emailAddress: string = '';
   ccEmails: string[] = [];
 
   sendMsgSubmitBtnClicked: boolean = false;
@@ -57,6 +57,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
   }
 
   ngOnInit(): void {
+    this.emailAddress = localStorage.getItem('user_email')!;
     this.userType = this.checkClientOrVendor(this.emailAddress);
     this.ticketId = this.activeRoute.snapshot.paramMap.get('id')!;
     this.getSingleTicketData(this.ticketId);
@@ -224,8 +225,15 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
     });
   };
 
+  showCloseReason: boolean = false; // This will control the visibility of the textarea
+
+  onStatusChange(event: any) {
+    const selectedValue = event.target.value;
+    this.showCloseReason = selectedValue === 'CLOSED'; // Show textarea if 'close' is selected
+  }
+
   getStatusList = () => {
-    this.clientStatus = this._enumService.getStatus().filter((status) => status.enumName !== StatusEnum.AWAITING_REPLY && status.enumName !== StatusEnum.SOLVED && status.enumName !== StatusEnum.OPEN);
+    this.clientStatus = this._enumService.getStatus().filter((status) => status.enumName !== StatusEnum.AWAITING_REPLY && status.enumName !== StatusEnum.OPEN);
   };
 
   getSupportTypeDisplayName(enumName: any): string {

@@ -35,6 +35,8 @@ export class TicketManageService {
       }
     } else if (fetchType == 'all') {
       return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/general/getAll`);
+    } else if (fetchType == 'cc') {
+      return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/by-cc-email`);
     } else {
       return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/severity/${fetchType}`);
     }

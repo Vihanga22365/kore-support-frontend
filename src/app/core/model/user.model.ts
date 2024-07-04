@@ -22,8 +22,8 @@ export interface LogInResponse {
   token?: string;
   refreshToken?: string;
   expirationTime?: string;
-  role?: string;
-  productGroup?: string;
+  roles?: string[];
+  productGroup?: string[];
   email?: string;
 }
 

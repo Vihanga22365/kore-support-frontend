@@ -59,7 +59,7 @@
 
                 <div class="mb-3">
                   <label class="form-label" for="affectedEnvironment">Product</label>
-                  <div>{{ getProductDisplayName(ticketDetails.product) }}</div>
+                  <div>{{ ticketDetails.product }}</div>
                 </div>
 
                 <div class="mb-3">
@@ -88,13 +88,17 @@
                 <form [formGroup]="changeStatusSubmitForm" (ngSubmit)="changeStatusDetailsSubmit()">
                   <div class="mb-3">
                     <label class="form-label" for="changeClientStatus">Ticket Status <span style="color: red">*</span></label>
-                    <select [formControl]="statusControl" class="form-control form-select" name="changeClientStatus" id="changeClientStatus">
+                    <select (change)="onStatusChange($event)" [formControl]="statusControl" class="form-control form-select" name="changeClientStatus" id="changeClientStatus">
                       <option value="" selected>Select Ticket Status</option>
                       <option *ngFor="let status of clientStatus" [value]="status.enumName">{{ status.displayName }}</option>
                     </select>
                     <div class="error-msg" *ngIf="statusControl.touched && statusControl.invalid">
                       <i class="fa fa-times-circle"></i>
                       Please select Status
+                    </div>
+                    <div class="mb-3" *ngIf="showCloseReason">
+                      <label class="form-label" for="closeReason">Close Reason<span style="color: red">*</span></label>
+                      <textarea class="form-control" name="closeReason" id="closeReason" rows="10"></textarea>
                     </div>
                     <div class="mb-3 mt-2">
                       <button

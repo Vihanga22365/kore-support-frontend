@@ -29,7 +29,7 @@
                 <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Submit a User Details</h5>
                 <form [formGroup]="userSubmitForm" (ngSubmit)="createUser()">
                   <div class="mb-3">
-                    <label class="form-label" for="firstName">First Name</label>
+                    <label class="form-label" for="firstName">First Name<span style="color: red">*</span></label>
                     <input [formControl]="firstNameControl" type="text" class="form-control" id="firstName" placeholder="Enter your first name" />
                     <div class="error-msg" *ngIf="firstNameControl.touched && firstNameControl.invalid">
                       <i class="fa fa-times-circle"></i>
@@ -38,7 +38,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="lastName">Last Name</label>
+                    <label class="form-label" for="lastName">Last Name<span style="color: red">*</span></label>
                     <input [formControl]="lastNameControl" type="text" class="form-control" id="lastName" placeholder="Enter your last name" />
                     <div class="error-msg" *ngIf="lastNameControl.touched && lastNameControl.invalid">
                       <i class="fa fa-times-circle"></i>
@@ -47,7 +47,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="emailAddress">Email</label>
+                    <label class="form-label" for="emailAddress">Email<span style="color: red">*</span></label>
                     <input [formControl]="emailAddressControl" type="email" class="form-control" id="emailAddress" placeholder="Enter your email" />
                     <div class="error-msg" *ngIf="emailAddressControl.touched && emailAddressControl.invalid && emailAddressControl.errors && !emailAddressControl.errors['pattern']">
                       <i class="fa fa-times-circle"></i>
@@ -60,7 +60,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="phoneNumber">Phone Number</label>
+                    <label class="form-label" for="phoneNumber">Phone Number<span style="color: red">*</span></label>
                     <input [formControl]="phoneNumberControl" type="text" class="form-control" id="phoneNumber" placeholder="Enter your phone number" />
                     <div class="error-msg" *ngIf="phoneNumberControl.touched && phoneNumberControl.invalid">
                       <i class="fa fa-times-circle"></i>
@@ -69,7 +69,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="password">Password</label>
+                    <label class="form-label" for="password">Password<span style="color: red">*</span></label>
                     <input [formControl]="passwordControl" type="password" class="form-control" id="password" placeholder="Enter your password" />
                     <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && !confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
@@ -82,7 +82,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <label class="form-label" for="confirmPassword">Confirm Password<span style="color: red">*</span></label>
                     <input [formControl]="confirmPasswordControl" type="password" class="form-control" id="confirmPassword" placeholder="Enter your password again" />
                     <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && !confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>

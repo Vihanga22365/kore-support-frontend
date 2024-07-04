@@ -90,6 +90,11 @@ const routes: Routes = [
         component: ProductManagementComponent,
         children: [
           {
+            path: '',
+            redirectTo: 'view-product',
+            pathMatch: 'full',
+          },
+          {
             path: 'create-product',
             component: CreateProductComponent,
           },

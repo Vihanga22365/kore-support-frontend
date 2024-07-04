@@ -22,10 +22,14 @@
       <div class="card">
         <div class="card-body">
           <div class="col-sm-12" style="text-align: right; padding-bottom: 1%">
+            <div style="text-align: left; float: left">
+              <button class="btn btn-success" (click)="exportToExcel()">Export to Excel</button>
+            </div>
             <!-- <div class="row"> -->
-            <button class="btn btn-primary" [ngClass]="{ 'btn-primary': fetchTicketType != 'normal', 'btn-secondary': fetchTicketType == 'normal' }" (click)="getAllTicketsData('normal')" style="margin-right: 3px">View My Ticket</button>
-            <button class="btn btn-primary" style="margin-right: 3px" [ngClass]="{ 'btn-primary': fetchTicketType != 'all', 'btn-secondary': fetchTicketType == 'all' }" (click)="getAllTicketsData('all')" *ngIf="userRole == 'ADMIN'">
-              View All Ticket
+            <button class="btn btn-primary" [ngClass]="{ 'btn-primary': fetchTicketType != 'normal', 'btn-secondary': fetchTicketType == 'normal' }" (click)="getAllTicketsData('normal')" style="margin-right: 3px">View My Tickets</button>
+            <button class="btn btn-primary" [ngClass]="{ 'btn-primary': fetchTicketType != 'cc', 'btn-secondary': fetchTicketType == 'cc' }" (click)="getAllTicketsData('cc')" style="margin-right: 3px">View CC Tickets</button>
+            <button class="btn btn-primary" style="margin-right: 3px" [ngClass]="{ 'btn-primary': fetchTicketType != 'all', 'btn-secondary': fetchTicketType == 'all' }" (click)="getAllTicketsData('all')" *ngIf="userRole.includes('ADMIN')">
+              View All Tickets
             </button>
             <div class="btn-group">
               <button

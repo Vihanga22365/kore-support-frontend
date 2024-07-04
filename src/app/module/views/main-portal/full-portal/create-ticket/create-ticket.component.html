@@ -100,7 +100,7 @@
                     <label class="form-label" for="product">Product <span style="color: red">*</span></label>
                     <select [formControl]="productControl" class="form-control form-select" name="product" id="product">
                       <option value="" selected>Select Product</option>
-                      <option *ngFor="let product of products" [value]="product.enumName">{{ product.displayName }}</option>
+                      <option *ngFor="let product of productList" [value]="product.name">{{ product.name }}</option>
                     </select>
                     <div class="error-msg" *ngIf="productControl.touched && productControl.invalid">
                       <i class="fa fa-times-circle"></i>

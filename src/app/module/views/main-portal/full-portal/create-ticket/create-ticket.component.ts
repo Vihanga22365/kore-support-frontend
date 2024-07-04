@@ -3,8 +3,10 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { files } from 'jszip';
 import { Subscription } from 'rxjs';
 import { Environment, InstallationType, Product, Severity, SupportRequestType } from 'src/app/core/model/enums.model';
+import { ProductResponse } from 'src/app/core/model/product.model';
 import { Ticket } from 'src/app/core/model/ticket.model';
 import { EnumService } from 'src/app/core/service/enum.service';
+import { ProductService } from 'src/app/core/service/product.service';
 import { TicketManageService } from 'src/app/core/service/ticket-manage.service';
 import Swal from 'sweetalert2';
 
@@ -15,6 +17,7 @@ import Swal from 'sweetalert2';
 })
 export class CreateTicketComponent implements OnInit, OnDestroy {
   createTicketSubscription$!: Subscription;
+  getProductsSubscription$!: Subscription;
 
   ccEmailControl = new FormControl();
   supportRequestTypeControl = new FormControl('', Validators.required);
@@ -31,6 +34,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   severities: Severity[] = [];
   installationTypes: InstallationType[] = [];
   supportRequestTypes: SupportRequestType[] = [];
+  productList: ProductResponse[] = [];
 
   createTicketSubmitBtnClicked: boolean = false;
 
@@ -40,7 +44,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   inputValue: string = '';
   ccEmailValues: string[] = [];
 
-  constructor(private _enumService: EnumService, private _formBuilder: FormBuilder, private _ticketService: TicketManageService) {}
+  constructor(private _enumService: EnumService, private _formBuilder: FormBuilder, private _ticketService: TicketManageService, private _productService: ProductService) {}
 
   ngOnInit(): void {
     this.ticketSubmitForm = this._formBuilder.group({
@@ -60,6 +64,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     this.severities = this._enumService.getSeverity();
     this.installationTypes = this._enumService.getInstallationType();
     this.supportRequestTypes = this._enumService.getSupportRequestType();
+    this.getAllProducts();
   }
 
   // Start Dropzone Code
@@ -95,7 +100,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   createTicket() {
     this.createTicketSubmitBtnClicked = true;
     let ccemails = this.ccEmailValues;
-    console.log(ccemails);
+    const user_email = localStorage.getItem('user_email');
 
     if (this.ticketSubmitForm.invalid) {
       Object.values(this.ticketSubmitForm.controls).forEach((control) => {
@@ -106,7 +111,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     }
 
     const formData = new FormData();
-    formData.append('emailAddress', 'vihangamihirangaz1@gmail.com');
+    formData.append('emailAddress', user_email!);
     formData.append('ccEmailAddresses', JSON.stringify(ccemails)); // Convert the array to a string
     formData.append('supportRequestType', this.supportRequestTypeControl.value!);
     formData.append('subject', this.subjectControl.value!);
@@ -154,7 +159,19 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     });
   }
 
+  getAllProducts = () => {
+    this.getProductsSubscription$ = this._productService.getAllProducts().subscribe({
+      next: (response) => {
+        this.productList = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
   ngOnDestroy(): void {
     this.createTicketSubscription$?.unsubscribe();
+    this.getProductsSubscription$?.unsubscribe();
   }
 }

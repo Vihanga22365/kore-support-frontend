@@ -60,12 +60,12 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('auth_token', response.token!);
           localStorage.setItem('user_email', response.email!);
 
-          if (response.role) {
-            localStorage.setItem('user_role', response.role);
+          if (response.roles) {
+            localStorage.setItem('user_role', JSON.stringify(response.roles));
           }
 
           if (response.productGroup) {
-            localStorage.setItem('user_product_group', response.productGroup);
+            localStorage.setItem('user_product_group', JSON.stringify(response.roles));
           }
 
           if (localStorage.getItem('auth_token') !== null) {

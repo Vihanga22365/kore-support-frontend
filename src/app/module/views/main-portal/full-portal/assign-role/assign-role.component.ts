@@ -23,6 +23,7 @@ export class AssignRoleComponent {
   displayPages = 1;
 
   userRoleUpdateBtnIsDisable: boolean = false;
+  selectedUserType: string = 'virtusa';
 
   userRoleControl = new FormControl('', Validators.required);
 
@@ -33,7 +34,7 @@ export class AssignRoleComponent {
   }
 
   ngOnInit(): void {
-    this.getAllUsers();
+    this.getAllUsers('@virtusa.com');
     this.getUserRoles();
   }
 
@@ -58,7 +59,7 @@ export class AssignRoleComponent {
             background: '#bcf1cd',
             showConfirmButton: true,
           });
-          this.getAllUsers();
+          this.changeSelectedUserType(this.selectedUserType);
           this.userRoleUpdateBtnIsDisable = false;
         } else {
           Swal.fire({
@@ -84,10 +85,19 @@ export class AssignRoleComponent {
     });
   }
 
-  getAllUsers() {
+  changeSelectedUserType = (userType: string) => {
+    this.selectedUserType = userType;
+    if (userType === 'virtusa') {
+      this.getAllUsers('@virtusa.com');
+    } else if (userType === 'kore') {
+      this.getAllUsers('@kore.ai');
+    }
+  };
+
+  getAllUsers(userType: string) {
     this.getAllUsersSubscription$ = this._userManageService.getAllUsers().subscribe({
       next: (response) => {
-        this.userList = response.ourUsersList.filter((user) => user.email.endsWith('@virtusa.com') === true);
+        this.userList = response.ourUsersList.filter((user) => user.email.endsWith(userType) === true);
       },
       error: (error) => {
         console.log(error);

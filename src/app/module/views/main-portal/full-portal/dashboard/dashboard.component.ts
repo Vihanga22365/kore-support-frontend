@@ -40,13 +40,11 @@ export class DashboardComponent {
     date.setMonth(date.getMonth() - 0);
     this.startMonth = date.toISOString().slice(0, 7);
 
-    let today = new Date();
-    let oneMonthAgo = new Date();
+    let dateTwo = new Date();
+    this.endDate = dateTwo.toISOString().slice(0, 7);
+    dateTwo.setMonth(dateTwo.getMonth() - 0);
+    this.startDate = dateTwo.toISOString().slice(0, 7);
 
-    oneMonthAgo.setMonth(today.getMonth() - 1);
-
-    this.startDate = `${oneMonthAgo.getFullYear()}-${('0' + (oneMonthAgo.getMonth() + 1)).slice(-2)}-${('0' + oneMonthAgo.getDate()).slice(-2)}`;
-    this.endDate = `${today.getFullYear()}-${('0' + (today.getMonth() + 1)).slice(-2)}-${('0' + today.getDate()).slice(-2)}`;
     this.getTicketsWithSeverity();
   }
 

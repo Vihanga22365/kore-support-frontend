@@ -14,3 +14,18 @@
     </footer>
   </div>
 </div>
+
+<button class="open-button" (click)="openForm()"><i class="fa fa-comment"></i></button>
+
+<!-- The popup chat form -->
+<div class="chat-popup" [style.display]="isFormOpen ? 'block' : 'none'" id="myForm">
+  <form class="form-container" (submit)="sendMessage()">
+    <span style="display: block; text-align: right">
+      <i style="color: #dd0909; font-size: 20px; cursor: pointer" (click)="closeForm()" class="mdi mdi-close-circle"></i>
+    </span>
+    <h1>Chat</h1>
+    <label for="msg"><b>Message</b></label>
+    <textarea placeholder="Type message..." name="msg" [(ngModel)]="message" required></textarea>
+    <button type="submit" class="btn btn-success waves-effect waves-light" style="width: 100%">Send</button>
+  </form>
+</div>

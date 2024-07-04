@@ -10,10 +10,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DialogPopupComponent } from './module/shared/dialog-popup/dialog-popup.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InterceptorInterceptor } from './core/interceptor/interceptor.interceptor';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, DialogPopupComponent],
-  imports: [BrowserModule, AppRoutingModule, MainPortalModule, LogPortalModule, BrowserAnimationsModule],
+  imports: [BrowserModule, AppRoutingModule, MainPortalModule, LogPortalModule, BrowserAnimationsModule, FormsModule],
   providers: [DatePipe, { provide: HTTP_INTERCEPTORS, useClass: InterceptorInterceptor, multi: true }],
   bootstrap: [AppComponent],
 })

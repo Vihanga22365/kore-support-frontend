@@ -22,7 +22,31 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-          <table class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%">
+          <div class="col-sm-12" style="text-align: center">
+            <button
+              [ngClass]="{ 'btn-primary': selectedUserType != 'virtusa', 'btn-secondary': selectedUserType == 'virtusa' }"
+              type="button"
+              class="btn btn-primary waves-effect waves-light"
+              (click)="changeSelectedUserType('virtusa')"
+              style="margin-left: 3px"
+            >
+              Virtusa Users
+            </button>
+            <button
+              [ngClass]="{ 'btn-primary': selectedUserType != 'kore', 'btn-secondary': selectedUserType == 'kore' }"
+              type="button"
+              class="btn btn-primary waves-effect waves-light"
+              (click)="changeSelectedUserType('kore')"
+              style="margin-left: 3px"
+            >
+              Kore Users
+            </button>
+          </div>
+          <div class="error-msg" *ngIf="userRoleControl.touched && userRoleControl.invalid">
+            <i class="fa fa-times-circle"></i>
+            Please select a role
+          </div>
+          <table class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%; margin-top: 1%">
             <thead>
               <tr>
                 <th>Name</th>
@@ -50,10 +74,6 @@
                       <i class="mdi mdi-check"></i>
                     </button>
                   </span>
-                  <div class="error-msg" *ngIf="userRoleControl.touched && userRoleControl.invalid">
-                    <i class="fa fa-times-circle"></i>
-                    Please select a role
-                  </div>
                 </td>
               </tr>
             </tbody>
