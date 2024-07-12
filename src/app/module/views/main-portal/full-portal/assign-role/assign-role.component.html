@@ -62,9 +62,11 @@
                   <a href="">{{ user.name }}</a>
                 </td>
                 <td>{{ user.email }}</td>
-                <td style="text-align: left">{{ user.role }}</td>
+                <td style="text-align: left">
+                  <div style="margin-top: 3px" *ngFor="let role of user.roles">{{ role }}</div>
+                </td>
                 <td align="center" style="width: 20%">
-                  <span style="display: flex; align-items: center">
+                  <!-- <span style="display: flex; align-items: center">
                     <select [formControl]="userRoleControl" class="form-control form-select" name="userRole" id="userRole" style="width: 100%">
                       <option value="" selected>Select Role</option>
                       <option *ngFor="let role of userRoles" [value]="role.enumName">{{ role.displayName }}</option>
@@ -73,7 +75,31 @@
                     <button [disabled]="userRoleUpdateBtnIsDisable" (click)="updateRole(user.id)" style="width: max-content; margin-left: 3px" type="button" class="btn btn-info waves-effect waves-light">
                       <i class="mdi mdi-check"></i>
                     </button>
-                  </span>
+                  </span> -->
+                  <div class="form-check form-switch form-switch-md mb-2" dir="ltr">
+                    <input type="checkbox" class="form-check-input" id="adminSwitch" [checked]="user.roles.includes('ADMIN')" (click)="updateUserRole(user.id, user.roles, 'ADMIN', user.roles.includes('ADMIN'))" />
+                    <label class="form-check-label" for="adminSwitch">ADMIN </label>
+                  </div>
+                  <div class="form-check form-switch form-switch-md mb-2" dir="ltr">
+                    <input type="checkbox" class="form-check-input" id="levelOneSwitch" [checked]="user.roles.includes('LEVEL-1')" (click)="updateUserRole(user.id, user.roles, 'LEVEL-1', user.roles.includes('LEVEL-1'))" />
+                    <label class="form-check-label" for="levelOneSwitch">LEVEL-1</label>
+                  </div>
+                  <div class="form-check form-switch form-switch-md mb-2" dir="ltr">
+                    <input type="checkbox" class="form-check-input" id="levelTwoSwitch" [checked]="user.roles.includes('LEVEL-2')" (click)="updateUserRole(user.id, user.roles, 'LEVEL-2', user.roles.includes('LEVEL-2'))" />
+                    <label class="form-check-label" for="levelTwoSwitch">LEVEL-2</label>
+                  </div>
+                  <div class="form-check form-switch form-switch-md mb-2" dir="ltr">
+                    <input type="checkbox" class="form-check-input" id="levelThreeSwitch" [checked]="user.roles.includes('LEVEL-3')" (click)="updateUserRole(user.id, user.roles, 'LEVEL-3', user.roles.includes('LEVEL-3'))" />
+                    <label class="form-check-label" for="levelThreeSwitch">LEVEL-3</label>
+                  </div>
+                  <div class="form-check form-switch form-switch-md mb-2" dir="ltr">
+                    <input type="checkbox" class="form-check-input" id="levelFourSwitch" [checked]="user.roles.includes('LEVEL-4')" (click)="updateUserRole(user.id, user.roles, 'LEVEL-4', user.roles.includes('LEVEL-4'))" />
+                    <label class="form-check-label" for="levelFourSwitch">LEVEL-4</label>
+                  </div>
+                  <div class="form-check form-switch form-switch-md mb-2" dir="ltr">
+                    <input type="checkbox" class="form-check-input" id="defaultSwitch" [checked]="user.roles.includes('DEFAULT')" (click)="updateUserRole(user.id, user.roles, 'DEFAULT', user.roles.includes('DEFAULT'))" />
+                    <label class="form-check-label" for="levelFourSwitch">DEFAULT</label>
+                  </div>
                 </td>
               </tr>
             </tbody>

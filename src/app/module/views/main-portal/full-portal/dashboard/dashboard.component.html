@@ -104,8 +104,8 @@
             <!-- <label>Date Range</label> -->
             <div class="col-sm-12">
               <div class="input-daterange input-group" id="datepicker4" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container="#datepicker4">
-                <input [(ngModel)]="startDate" type="month" class="form-control" name="start" placeholder="Start date" />
-                <input [(ngModel)]="endDate" type="month" class="form-control" name="end" placeholder="End date" />
+                <input (change)="getTicketsWithWaitingTime()" [(ngModel)]="startDate" type="month" class="form-control" name="start" placeholder="Start date" />
+                <input (change)="getTicketsWithWaitingTime()" [(ngModel)]="endDate" type="month" class="form-control" name="end" placeholder="End date" />
               </div>
             </div>
           </div>

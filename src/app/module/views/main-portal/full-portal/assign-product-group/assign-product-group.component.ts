@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Product, UserRoles } from 'src/app/core/model/enums.model';
+import { ProductResponse } from 'src/app/core/model/product.model';
 import { FetchUsersSubResponse } from 'src/app/core/model/user.model';
 import { EnumService } from 'src/app/core/service/enum.service';
+import { ProductService } from 'src/app/core/service/product.service';
 import { UserManageService } from 'src/app/core/service/user-manage.service';
 import Swal from 'sweetalert2';
 
@@ -14,8 +16,11 @@ import Swal from 'sweetalert2';
 })
 export class AssignProductGroupComponent {
   getAllUsersSubscription$!: Subscription;
+  getProductsSubscription$!: Subscription;
   userProductGroupSubscription$!: Subscription;
+
   userList!: FetchUsersSubResponse[];
+  productList: ProductResponse[] = [];
 
   userProductGroupControl = new FormControl('', Validators.required);
 
@@ -29,27 +34,35 @@ export class AssignProductGroupComponent {
   userRoles: UserRoles[] = [];
   productGroups: Product[] = [];
 
-  constructor(private _userManageService: UserManageService, private _enumService: EnumService) {
+  constructor(private _userManageService: UserManageService, private _enumService: EnumService, private _productService: ProductService) {
     this.updatePages();
   }
 
   ngOnInit(): void {
     this.getAllUsers();
     this.getProductGroups();
+    this.getAllProducts();
   }
 
-  updateProductGroup(userId: number) {
-    this.userProductGroupUpdateBtnIsDisable = true;
-    let productGroup = this.userProductGroupControl.value!;
+  updateProductGroup(userId: number, currentProductGroups: string[], clickedProductGroup: string, isActivate: boolean) {
+    console.log(userId, currentProductGroups, clickedProductGroup, isActivate);
 
-    if (productGroup === '') {
-      this.userProductGroupControl.setErrors({ required: true });
-      this.userProductGroupControl.markAsTouched();
-      this.userProductGroupUpdateBtnIsDisable = false;
-      return;
+    if (!isActivate) {
+      if (!currentProductGroups.includes(clickedProductGroup)) {
+        currentProductGroups.push(clickedProductGroup);
+      }
+    } else {
+      const index = currentProductGroups.indexOf(clickedProductGroup);
+      if (index > -1) {
+        currentProductGroups.splice(index, 1);
+      }
     }
 
-    this.userProductGroupSubscription$ = this._userManageService.updateUserProductGroup(userId, { productGroup }).subscribe({
+    const updatedRoles = {
+      productGroup: currentProductGroups,
+    };
+
+    this.userProductGroupSubscription$ = this._userManageService.updateUserProductGroup(userId, updatedRoles).subscribe({
       next: (response) => {
         if (response.statusCode === 200) {
           Swal.fire({
@@ -60,7 +73,6 @@ export class AssignProductGroupComponent {
             showConfirmButton: true,
           });
           this.getAllUsers();
-          this.userProductGroupUpdateBtnIsDisable = false;
         } else {
           Swal.fire({
             title: 'Not updated',
@@ -69,7 +81,6 @@ export class AssignProductGroupComponent {
             showConfirmButton: true,
             background: '#fbdde2',
           });
-          this.userProductGroupUpdateBtnIsDisable = false;
         }
       },
       error: (error) => {
@@ -81,15 +92,30 @@ export class AssignProductGroupComponent {
           showConfirmButton: true,
           background: '#fbdde2',
         });
-        this.userProductGroupUpdateBtnIsDisable = false;
       },
     });
   }
 
+  getAllProducts = () => {
+    this.getProductsSubscription$ = this._productService.getAllProducts().subscribe({
+      next: (response) => {
+        this.productList = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
   getAllUsers() {
     this.getAllUsersSubscription$ = this._userManageService.getAllUsers().subscribe({
       next: (response) => {
-        this.userList = response.ourUsersList.filter((user) => user.email.endsWith('@kore.ai') === true);
+        this.userList = response.ourUsersList
+          .filter((user) => user.email.endsWith('@kore.ai') === true)
+          .map((user) => ({
+            ...user,
+            productGroup: user.productGroup == null ? [] : user.productGroup,
+          }));
       },
       error: (error) => {
         console.log(error);
@@ -121,5 +147,6 @@ export class AssignProductGroupComponent {
   ngOnDestroy(): void {
     this.getAllUsersSubscription$?.unsubscribe();
     this.userProductGroupSubscription$?.unsubscribe();
+    this.getProductsSubscription$!?.unsubscribe();
   }
 }

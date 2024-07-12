@@ -60,8 +60,12 @@ export class TicketManageService {
     return this._httpClient.post(`${environment.TICKET_URL}/general/reopen`, reopenTicket);
   };
 
-  updateTicketStatus = (ticketNumber: string, closeTicketData: CloseTicket) => {
-    return this._httpClient.put(`${environment.TICKET_URL}/general/${ticketNumber}/closeTicket`, closeTicketData);
+  updateTicketStatus = (ticketNumber: string, closeTicketData: any, selectedStatus: string) => {
+    if (selectedStatus == 'CLOSED') {
+      return this._httpClient.put(`${environment.TICKET_URL}/general/${ticketNumber}/closeTicket`, closeTicketData);
+    } else {
+      return this._httpClient.put(`${environment.TICKET_URL}/general/${ticketNumber}/solve`, closeTicketData);
+    }
   };
 
   getTicketMaxAttempts = (ticketNumber: number) => {

@@ -27,8 +27,10 @@ export class DashboardComponent {
   rootChart1!: am5.Root;
 
   ticketsWithSeverityData: TimeSeverityChartResponse[] = [];
+  ticketWithWaitingTimeData: any[] = [];
 
   getTicketsWithSeveritySubscription$!: Subscription;
+  getTicketsWithWaitingTimeSubscription$!: Subscription;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private zone: NgZone, private _chartService: ChartService) {
     this.ticketsWithSeverityData = [];
@@ -46,6 +48,7 @@ export class DashboardComponent {
     this.startDate = dateTwo.toISOString().slice(0, 7);
 
     this.getTicketsWithSeverity();
+    this.getTicketsWithWaitingTime();
   }
 
   // Run the function only in the browser
@@ -89,136 +92,7 @@ export class DashboardComponent {
       /* Chart 2 code */
       /* Chart 2 code */
       /* Chart 2 code */
-
-      let rootChart1 = am5.Root.new('chartdiv1');
-
-      rootChart1.setThemes([am5themes_Animated.new(rootChart1)]);
-      rootChart1._logo!.dispose();
-
-      let chart1 = rootChart1.container.children.push(
-        am5xy.XYChart.new(rootChart1, {
-          panX: false,
-          panY: false,
-          wheelX: 'panX',
-          wheelY: 'zoomX',
-          paddingLeft: 0,
-          layout: rootChart1.verticalLayout,
-        })
-      );
-
-      chart1.set(
-        'scrollbarX',
-        am5.Scrollbar.new(rootChart1, {
-          orientation: 'horizontal',
-        })
-      );
-
-      let data1 = [
-        {
-          year: 'Ticket 1',
-          clientWaitingTime: 0.5,
-          vendorWaitingTime: 2.5,
-        },
-        {
-          year: 'Ticket 2',
-          clientWaitingTime: 2.6,
-          vendorWaitingTime: 2.7,
-        },
-        {
-          year: 'Ticket 3',
-          clientWaitingTime: 2.8,
-          vendorWaitingTime: 2.9,
-        },
-        {
-          year: 'Ticket 4',
-          clientWaitingTime: 0.5,
-          vendorWaitingTime: 2.5,
-        },
-        {
-          year: 'Ticket 5',
-          clientWaitingTime: 2.6,
-          vendorWaitingTime: 2.7,
-        },
-        {
-          year: 'Ticket 6',
-          clientWaitingTime: 2.8,
-          vendorWaitingTime: 2.9,
-        },
-      ];
-
-      let xRenderer1 = am5xy.AxisRendererX.new(rootChart1, {
-        minorGridEnabled: true,
-      });
-      let xAxis1 = chart1.xAxes.push(
-        am5xy.CategoryAxis.new(rootChart1, {
-          categoryField: 'year',
-          renderer: xRenderer1,
-          tooltip: am5.Tooltip.new(rootChart1, {}),
-        })
-      );
-
-      xRenderer1.grid.template.setAll({
-        location: 1,
-      });
-
-      xAxis1.data.setAll(data1);
-
-      let yAxis1 = chart1.yAxes.push(
-        am5xy.ValueAxis.new(rootChart1, {
-          min: 0,
-          renderer: am5xy.AxisRendererY.new(rootChart1, {
-            strokeOpacity: 0.1,
-          }),
-        })
-      );
-
-      let legend1 = chart1.children.push(
-        am5.Legend.new(rootChart1, {
-          centerX: am5.p50,
-          x: am5.p50,
-        })
-      );
-
-      function makeSeries1(name: string, fieldName: string) {
-        let series = chart1.series.push(
-          am5xy.ColumnSeries.new(rootChart1, {
-            name: name,
-            stacked: true,
-            xAxis: xAxis1,
-            yAxis: yAxis1,
-            valueYField: fieldName,
-            categoryXField: 'year',
-          })
-        );
-
-        series.columns.template.setAll({
-          tooltipText: '{name}, {categoryX}: {valueY}',
-          tooltipY: am5.percent(10),
-        });
-        series.data.setAll(data1);
-
-        series.appear();
-
-        series.bullets.push(function () {
-          return am5.Bullet.new(rootChart1, {
-            sprite: am5.Label.new(rootChart1, {
-              text: '{valueY}',
-              fill: rootChart1.interfaceColors.get('alternativeText'),
-              centerY: am5.p50,
-              centerX: am5.p50,
-              populateText: true,
-            }),
-          });
-        });
-
-        legend1.data.push(series);
-      }
-
-      makeSeries1('Client Waiting Time', 'clientWaitingTime');
-      makeSeries1('Vendor Waiting Time', 'vendorWaitingTime');
-
-      chart1.appear(1000, 100);
-
+      this.updateWaitingTimeChart(this.ticketWithWaitingTimeData);
       /* Chart 2 code */
       /* Chart 2 code */
       /* Chart 2 code */
@@ -227,7 +101,171 @@ export class DashboardComponent {
     });
   }
 
-  updateWaitingTimeChart = () => {};
+  getTicketsWithWaitingTime() {
+    // this.ticketWithWaitingTimeData = [
+    //   {
+    //     year: 'Ticket 1',
+    //     clientWaitingTime: 0.5,
+    //     vendorWaitingTime: 2.5,
+    //   },
+    //   {
+    //     year: 'Ticket 2',
+    //     clientWaitingTime: 2.6,
+    //     vendorWaitingTime: 2.7,
+    //   },
+    //   {
+    //     year: 'Ticket 3',
+    //     clientWaitingTime: 2.8,
+    //     vendorWaitingTime: 2.9,
+    //   },
+    //   {
+    //     year: 'Ticket 4',
+    //     clientWaitingTime: 0.5,
+    //     vendorWaitingTime: 2.5,
+    //   },
+    //   {
+    //     year: 'Ticket 5',
+    //     clientWaitingTime: 2.6,
+    //     vendorWaitingTime: 2.7,
+    //   },
+    //   {
+    //     year: 'Ticket 6',
+    //     clientWaitingTime: 2.8,
+    //     vendorWaitingTime: 2.9,
+    //   },
+    // ];
+    // console.log(this._chartService.getTicketsWithWaitingTime(this.startDate, this.endDate));
+
+    this._chartService.getTicketsWithWaitingTime(this.startDate, this.endDate).subscribe({
+      next: (response) => {
+        this.ticketWithWaitingTimeData = response.map((item) => {
+          return {
+            ticketId: `Ticket ${item.ticketId}`,
+            clientWaitingTime: Number(item.clientWaitingTime),
+            vendorWaitingTime: Number(item.vendorWaitingTime),
+          };
+        });
+        this.updateWaitingTimeChart(this.ticketWithWaitingTimeData);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+    });
+  }
+
+  updateWaitingTimeChart = (data1: any) => {
+    console.log(data1);
+    let rootChart1 = this.rootChart1;
+    if (this.rootChart1) {
+      rootChart1 = this.rootChart1;
+      rootChart1.dispose();
+    }
+
+    this.rootChart1 = am5.Root.new('chartdiv1');
+    rootChart1 = this.rootChart1;
+
+    rootChart1.setThemes([am5themes_Animated.new(rootChart1)]);
+    rootChart1._logo!.dispose();
+
+    let chart1 = rootChart1.container.children.push(
+      am5xy.XYChart.new(rootChart1, {
+        panX: false,
+        panY: false,
+        wheelX: 'panX',
+        wheelY: 'zoomX',
+        paddingLeft: 0,
+        layout: rootChart1.verticalLayout,
+      })
+    );
+
+    chart1.set(
+      'scrollbarX',
+      am5.Scrollbar.new(rootChart1, {
+        orientation: 'horizontal',
+        width: am5.percent(98),
+      })
+    );
+
+    chart1.set(
+      'scrollbarY',
+      am5.Scrollbar.new(rootChart1, {
+        orientation: 'vertical',
+        height: am5.percent(100),
+      })
+    );
+
+    let xRenderer1 = am5xy.AxisRendererX.new(rootChart1, {
+      minorGridEnabled: true,
+    });
+    let xAxis1 = chart1.xAxes.push(
+      am5xy.CategoryAxis.new(rootChart1, {
+        categoryField: 'ticketId',
+        renderer: xRenderer1,
+        tooltip: am5.Tooltip.new(rootChart1, {}),
+      })
+    );
+
+    xRenderer1.grid.template.setAll({
+      location: 1,
+    });
+
+    xAxis1.data.setAll(data1);
+
+    let yAxis1 = chart1.yAxes.push(
+      am5xy.ValueAxis.new(rootChart1, {
+        min: 0,
+        renderer: am5xy.AxisRendererY.new(rootChart1, {
+          strokeOpacity: 0.1,
+        }),
+      })
+    );
+
+    let legend1 = chart1.children.push(
+      am5.Legend.new(rootChart1, {
+        centerX: am5.p50,
+        x: am5.p50,
+      })
+    );
+
+    function makeSeries1(name: string, fieldName: string) {
+      let series = chart1.series.push(
+        am5xy.ColumnSeries.new(rootChart1, {
+          name: name,
+          stacked: true,
+          xAxis: xAxis1,
+          yAxis: yAxis1,
+          valueYField: fieldName,
+          categoryXField: 'ticketId',
+        })
+      );
+
+      series.columns.template.setAll({
+        tooltipText: '{name}, {categoryX}: {valueY}',
+        tooltipY: am5.percent(10),
+      });
+      series.data.setAll(data1);
+
+      series.appear();
+
+      series.bullets.push(function () {
+        return am5.Bullet.new(rootChart1, {
+          sprite: am5.Label.new(rootChart1, {
+            fill: rootChart1.interfaceColors.get('alternativeText'),
+            centerY: am5.p50,
+            centerX: am5.p50,
+            populateText: true,
+          }),
+        });
+      });
+
+      legend1.data.push(series);
+    }
+
+    makeSeries1('Client Waiting Time (Days)', 'clientWaitingTime');
+    makeSeries1('Vendor Waiting Time (Days)', 'vendorWaitingTime');
+
+    chart1.appear(1000, 100);
+  };
 
   updateSeverityChart = (mainChartData: TimeSeverityChartResponse[]) => {
     let root = this.root;
@@ -256,6 +294,15 @@ export class DashboardComponent {
       'scrollbarX',
       am5.Scrollbar.new(root, {
         orientation: 'horizontal',
+        width: am5.percent(98),
+      })
+    );
+
+    this.chart.set(
+      'scrollbarY',
+      am5.Scrollbar.new(root, {
+        orientation: 'vertical',
+        height: am5.percent(100),
       })
     );
 
@@ -351,5 +398,6 @@ export class DashboardComponent {
     });
 
     this.getTicketsWithSeveritySubscription$?.unsubscribe();
+    this.getTicketsWithWaitingTimeSubscription$?.unsubscribe();
   }
 }

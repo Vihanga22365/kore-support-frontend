@@ -33,7 +33,10 @@
           <input class="form-control" type="text" placeholder="Search" (keyup)="filterOptions($event)" [value]="searchTerm" />
           <ul *ngIf="showDropdown">
             <li *ngFor="let option of options" (click)="selectOption(option.ticketId)">
-              {{ option.ticketNumber }}
+              <div>
+                <b>{{ option.ticketNumber }}</b>
+              </div>
+              <div class="subject-text">Subject for the Ticket Subject for the Ticket Subject for the Ticket Subject for the Ticket Subject for the TicketSubject for the Ticket</div>
             </li>
           </ul>
           <span class="fa fa-search"></span>
@@ -60,123 +63,18 @@
         </div>
       </div>
 
-      <!-- <div class="dropdown d-inline-block ms-1">
-        <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="ti-bell"></i>
-          <span class="badge text-bg-danger rounded-pill">3</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown">
-          <div class="p-3">
-            <div class="row align-items-center">
-              <div class="col">
-                <h5 class="m-0">Notifications (258)</h5>
-              </div>
-            </div>
-          </div>
-          <div data-simplebar style="max-height: 230px">
-            <a href="javascript:void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar-xs">
-                    <span class="avatar-title border-success rounded-circle">
-                      <i class="mdi mdi-cart-outline"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">Your order is placed</h6>
-                  <div class="text-muted">
-                    <p class="mb-1">If several languages coalesce the grammar</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <a href="javascript:void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar-xs">
-                    <span class="avatar-title border-warning rounded-circle">
-                      <i class="mdi mdi-message"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">New Message received</h6>
-                  <div class="text-muted">
-                    <p class="mb-1">You have 87 unread messages</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <a href="javascript:void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar-xs">
-                    <span class="avatar-title border-info rounded-circle">
-                      <i class="mdi mdi-glass-cocktail"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">Your item is shipped</h6>
-                  <div class="text-muted">
-                    <p class="mb-1">It is a long established fact that a reader will</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <a href="javascript:void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar-xs">
-                    <span class="avatar-title border-primary rounded-circle">
-                      <i class="mdi mdi-cart-outline"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">Your order is placed</h6>
-                  <div class="text-muted">
-                    <p class="mb-1">Dummy text of the printing and typesetting industry.</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <a href="javascript:void(0);" class="text-reset notification-item">
-              <div class="d-flex">
-                <div class="flex-shrink-0 me-3">
-                  <div class="avatar-xs">
-                    <span class="avatar-title border-warning rounded-circle">
-                      <i class="mdi mdi-message"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <h6 class="mb-1">New Message received</h6>
-                  <div class="text-muted">
-                    <p class="mb-1">You have 87 unread messages</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="p-2 border-top">
-            <a class="btn btn-sm btn-link font-size-14 w-100 text-center" href="javascript:void(0)"> View all </a>
-          </div>
-        </div>
-      </div> -->
-
       <div class="dropdown d-inline-block">
         <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img style="height: 41px; width: 41px" class="rounded-circle header-profile-user" src="assets/images/users/user-4.png" alt="Header Avatar" />
+          <div style="font-size: 12px; text-align: center">{{ userEmail }}</div>
         </button>
         <div class="dropdown-menu dropdown-menu-end">
           <!-- item-->
-          <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle font-size-17 text-muted align-middle me-1"></i> Profile</a>
+
+          <a class="dropdown-item" routerLink="/panel/user-profile"
+            ><i class="mdi mdi-account-circle font-size-17 text-muted align-middle me-1"></i> Profile
+            <!-- <div style="font-size: 12px; text-align: center">{{ userEmail }}</div> -->
+          </a>
           <div class="dropdown-divider"></div>
           <a style="cursor: pointer" class="dropdown-item text-danger" (click)="logOutUser()"><i class="mdi mdi-power font-size-17 text-muted align-middle me-1 text-danger"></i> Logout</a>
         </div>

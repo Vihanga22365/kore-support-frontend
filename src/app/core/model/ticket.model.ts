@@ -10,6 +10,7 @@ export interface Ticket {
   affectedEnvironment: string;
   platformVersion: string;
   attachments: File[];
+  referenceNumber: string | null;
 }
 
 export interface ReopenTicket {
@@ -45,6 +46,7 @@ export interface TicketResponse {
   installationType: string;
   affectedEnvironment: string;
   platformVersion: string;
+  referenceNumber: string | null;
 }
 
 export interface GetTicketsResponse {
@@ -63,6 +65,7 @@ export interface GetTicketsResponse {
   clientStatus: string;
   vendorStatus: string;
   reopenReason: string | null;
+  referenceNumber: string | null;
 }
 
 export interface GetMessageResponse {

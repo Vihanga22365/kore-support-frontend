@@ -22,6 +22,8 @@ import { ViewAffectedEnvironmentComponent } from './full-portal/affected-environ
 import { AuthGuard } from 'src/app/core/guard/auth.guard';
 import { AssignRoleComponent } from './full-portal/assign-role/assign-role.component';
 import { AssignProductGroupComponent } from './full-portal/assign-product-group/assign-product-group.component';
+import { UserProfileComponent } from './full-portal/user-profile/user-profile.component';
+import { CreateEmailGroupsComponent } from './full-portal/create-email-groups/create-email-groups.component';
 
 const routes: Routes = [
   {
@@ -68,6 +70,16 @@ const routes: Routes = [
         path: 'assign-product-group',
         canActivate: [AuthGuard],
         component: AssignProductGroupComponent,
+      },
+      {
+        path: 'user-profile',
+        canActivate: [AuthGuard],
+        component: UserProfileComponent,
+      },
+      {
+        path: 'create-email-group',
+        canActivate: [AuthGuard],
+        component: CreateEmailGroupsComponent,
       },
       {
         path: 'severity-management',

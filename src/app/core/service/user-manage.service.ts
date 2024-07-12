@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FetchUsersMainResponse, LogInResponse, LogInUser, User, UserProductGroupDetails, UserResponse, UserRoleDetails } from '../model/user.model';
+import { FetchUsersMainResponse, LogInResponse, LogInUser, SingleUserResponse, User, UserProductGroupDetails, UserResponse, UserRoleDetails } from '../model/user.model';
 import { environment } from 'src/environments/environments';
 
 @Injectable({
@@ -27,5 +27,9 @@ export class UserManageService {
 
   updateUserProductGroup = (userId: number, productGroup: UserProductGroupDetails) => {
     return this._httpClient.put<UserResponse>(`${environment.AUTH_ADMIN_URL}/set-product-group/${userId}`, productGroup);
+  };
+
+  getUserDetails = () => {
+    return this._httpClient.get<SingleUserResponse>(`${environment.MAIN_URL}/adminuser/get-profile`);
   };
 }

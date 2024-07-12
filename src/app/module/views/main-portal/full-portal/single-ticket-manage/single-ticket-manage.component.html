@@ -44,7 +44,30 @@
               <div class="col-sm-12 card-body">
                 <div class="mb-3">
                   <label class="form-label" for="clientStatus">Status</label>
-                  <div>{{ getStatusDisplayName(ticketDetails.clientStatus) }}</div>
+                  <div>
+                    <br />
+                    <span
+                      [class.open-status]="ticketDetails.clientStatus == 'OPEN'"
+                      [class.close-status]="ticketDetails.clientStatus == 'CLOSED'"
+                      [class.solve-status]="ticketDetails.clientStatus == 'SOLVED'"
+                      [class.waiting-status]="ticketDetails.clientStatus == 'AWAITING_REPLY'"
+                      *ngIf="userType == 'CLIENT'"
+                      >{{ getStatusDisplayName(ticketDetails.clientStatus) }}</span
+                    >
+                    <span
+                      [class.open-status]="ticketDetails.vendorStatus == 'OPEN'"
+                      [class.close-status]="ticketDetails.vendorStatus == 'CLOSED'"
+                      [class.solve-status]="ticketDetails.vendorStatus == 'SOLVED'"
+                      [class.waiting-status]="ticketDetails.vendorStatus == 'AWAITING_REPLY'"
+                      *ngIf="userType == 'VENDOR'"
+                      >{{ getStatusDisplayName(ticketDetails.vendorStatus) }}</span
+                    >
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" for="referenceNumber">Reference Number </label>
+                  <div>{{ ticketDetails.referenceNumber ? ticketDetails.referenceNumber : "-" }}</div>
                 </div>
 
                 <div class="mb-3">
@@ -83,7 +106,24 @@
               <div class="col-sm-12 card-body">
                 <div class="mb-3">
                   <label class="form-label" for="clientStatus">Current Status</label>
-                  <div>{{ getStatusDisplayName(ticketDetails.clientStatus) }}</div>
+                  <!-- <div>{{ getStatusDisplayName(ticketDetails.clientStatus) }}</div> -->
+                  <br />
+                  <span
+                    [class.open-status]="ticketDetails.clientStatus == 'OPEN'"
+                    [class.close-status]="ticketDetails.clientStatus == 'CLOSED'"
+                    [class.solve-status]="ticketDetails.clientStatus == 'SOLVED'"
+                    [class.waiting-status]="ticketDetails.clientStatus == 'AWAITING_REPLY'"
+                    *ngIf="userType == 'CLIENT'"
+                    >{{ getStatusDisplayName(ticketDetails.clientStatus) }}</span
+                  >
+                  <span
+                    [class.open-status]="ticketDetails.vendorStatus == 'OPEN'"
+                    [class.close-status]="ticketDetails.vendorStatus == 'CLOSED'"
+                    [class.solve-status]="ticketDetails.vendorStatus == 'SOLVED'"
+                    [class.waiting-status]="ticketDetails.vendorStatus == 'AWAITING_REPLY'"
+                    *ngIf="userType == 'VENDOR'"
+                    >{{ getStatusDisplayName(ticketDetails.vendorStatus) }}</span
+                  >
                 </div>
                 <form [formGroup]="changeStatusSubmitForm" (ngSubmit)="changeStatusDetailsSubmit()">
                   <div class="mb-3">
@@ -96,9 +136,13 @@
                       <i class="fa fa-times-circle"></i>
                       Please select Status
                     </div>
-                    <div class="mb-3" *ngIf="showCloseReason">
-                      <label class="form-label" for="closeReason">Close Reason<span style="color: red">*</span></label>
-                      <textarea class="form-control" name="closeReason" id="closeReason" rows="10"></textarea>
+                    <div class="mb-3 mt-2" *ngIf="showCloseReason">
+                      <label class="form-label" for="closeReason">Reason for close <span style="color: red">*</span></label>
+                      <textarea class="form-control" [formControl]="closeReasonControl" name="closeReason" id="closeReason" rows="10"></textarea>
+                      <div class="error-msg" *ngIf="closeReasonControl.touched && closeReasonControl.invalid">
+                        <i class="fa fa-times-circle"></i>
+                        Please enter reason for close
+                      </div>
                     </div>
                     <div class="mb-3 mt-2">
                       <button

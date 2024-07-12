@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
           }
 
           if (response.productGroup) {
-            localStorage.setItem('user_product_group', JSON.stringify(response.roles));
+            localStorage.setItem('user_product_group', JSON.stringify(response.productGroup));
           }
 
           if (localStorage.getItem('auth_token') !== null) {

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { User } from 'src/app/core/model/user.model';
 import { UserManageService } from 'src/app/core/service/user-manage.service';
 import Swal from 'sweetalert2';
@@ -16,6 +17,8 @@ export class CreateUserComponent {
   phoneNumberControl = new FormControl('', Validators.required);
   passwordControl = new FormControl('', Validators.required);
   confirmPasswordControl = new FormControl('', Validators.required);
+
+  createUserSubscription$!: Subscription;
 
   submitBtnClicked: boolean = false;
 
@@ -57,9 +60,10 @@ export class CreateUserComponent {
       name: this.firstNameControl.value + ' ' + this.lastNameControl.value,
       password: this.passwordControl.value!,
       city: this.phoneNumberControl.value!,
+      roles: [],
     };
 
-    this._userService.createUser(userDetails).subscribe({
+    this.createUserSubscription$ = this._userService.createUser(userDetails).subscribe({
       next: (response) => {
         Swal.fire({
           title: 'Success',
@@ -83,4 +87,8 @@ export class CreateUserComponent {
       },
     });
   };
+
+  ngOnDestroy(): void {
+    this.createUserSubscription$?.unsubscribe();
+  }
 }

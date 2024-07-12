@@ -34,6 +34,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
   changeStatusSubmitBtnClicked: boolean = false;
 
   statusControl = new FormControl('', Validators.required);
+  closeReasonControl = new FormControl('', Validators.required);
   messagesControl = new FormControl();
   status: any;
 
@@ -68,6 +69,7 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
     });
     this.changeStatusSubmitForm = this._formBuilder.group({
       status: this.statusControl,
+      closeReason: this.closeReasonControl!,
     });
     this.getAllMessages();
 
@@ -103,11 +105,20 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
       return;
     }
 
-    const data: CloseTicket = {
-      sentBy: this.emailAddress,
-    };
+    const selectedStatus = this.statusControl.value!;
+    const closeReason = this.closeReasonControl.value;
+    let data = {};
 
-    this.updateTicketStatusSubscription$ = this._ticketManageService.updateTicketStatus(this.ticketId, data).subscribe({
+    if (selectedStatus == 'CLOSED') {
+      data = {
+        sentBy: this.emailAddress,
+        closeTicketRequest: closeReason,
+      };
+    } else {
+      data = {};
+    }
+
+    this.updateTicketStatusSubscription$ = this._ticketManageService.updateTicketStatus(this.ticketId, data, selectedStatus).subscribe({
       next: (response) => {
         this.getSingleTicketData(this.ticketId);
         this.changeStatusSubmitBtnClicked = false;
@@ -230,6 +241,14 @@ export class SingleTicketManageComponent implements OnInit, AfterViewChecked, On
   onStatusChange(event: any) {
     const selectedValue = event.target.value;
     this.showCloseReason = selectedValue === 'CLOSED'; // Show textarea if 'close' is selected
+
+    const selectedStatus = this.statusControl.value!;
+
+    if (selectedStatus == 'CLOSED') {
+      this.changeStatusSubmitForm.addControl('closeReason', this.closeReasonControl);
+    } else {
+      this.changeStatusSubmitForm.removeControl('closeReason');
+    }
   }
 
   getStatusList = () => {

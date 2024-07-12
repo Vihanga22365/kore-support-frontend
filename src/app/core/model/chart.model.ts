@@ -5,3 +5,8 @@ export interface TimeSeverityChartResponse {
   severity4: number;
   year: string;
 }
+export interface TicketWithWaitingTimeChartResponse {
+  vendorWaitingTime: number;
+  clientWaitingTime: number;
+  ticketId: string;
+}

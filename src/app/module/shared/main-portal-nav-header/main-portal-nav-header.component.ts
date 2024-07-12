@@ -17,6 +17,8 @@ export class MainPortalNavHeaderComponent {
   searchTerm = '';
   options: searchTicketResponse[] = [];
 
+  userEmail!: string;
+
   @HostListener('document:click', ['$event'])
   clickout(event: any) {
     if (!this.eRef.nativeElement.contains(event.target)) {
@@ -25,6 +27,10 @@ export class MainPortalNavHeaderComponent {
   }
 
   constructor(private eRef: ElementRef, private _ticketService: TicketManageService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.userEmail = localStorage.getItem('user_email')!;
+  }
 
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;

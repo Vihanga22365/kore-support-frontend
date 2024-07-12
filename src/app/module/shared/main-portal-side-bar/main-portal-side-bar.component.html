@@ -8,7 +8,7 @@
         <li class="menu-title">Main</li>
 
         <li>
-          <a routerLink="/panel/dashboard" class="waves-effect">
+          <a routerLinkActive="active-link" routerLink="/panel/dashboard" class="waves-effect">
             <i class="mdi mdi-view-dashboard"></i>
             <span>Dashboard</span>
           </a>
@@ -20,8 +20,8 @@
             <span>Ticket Management</span>
           </a>
           <ul class="sub-menu" aria-expanded="false">
-            <li><a routerLink="/panel/create-ticket">Submit a Ticket</a></li>
-            <li><a routerLink="/panel/view-tickets">My Activities</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/create-ticket">Submit a Ticket</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/view-tickets">My Activities</a></li>
             <!-- <li><a href="email-compose.html">Email Compose</a></li> -->
           </ul>
         </li>
@@ -32,10 +32,10 @@
             <span>User Management</span>
           </a>
           <ul class="sub-menu" aria-expanded="false">
-            <li><a routerLink="/panel/create-user">Create User</a></li>
-            <li><a routerLink="/panel/view-users">View Users</a></li>
-            <li><a routerLink="/panel/assign-role">Assign Role</a></li>
-            <li><a routerLink="/panel/assign-product-group">Assign Product Group</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/create-user">Create User</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/view-users">View Users</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/assign-role">Assign Role</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/assign-product-group">Assign Product Group</a></li>
           </ul>
         </li>
 
@@ -45,10 +45,11 @@
             <span>Settings</span>
           </a>
           <ul class="sub-menu" aria-expanded="false">
-            <!-- <li><a routerLink="/panel/severity-management">Severity</a></li> -->
-            <li><a routerLink="/panel/product-management">Product</a></li>
-            <!-- <li><a routerLink="/panel/installation-type-management">Installation Type</a></li>
-            <li><a routerLink="/panel/affected-environment-management">Affected Environment</a></li> -->
+            <!-- <li><a routerLinkActive="active-link" routerLink="/panel/severity-management">Severity</a></li> -->
+            <li><a routerLinkActive="active-link" routerLink="/panel/product-management">Product</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/create-email-group">Email Groups</a></li>
+            <!-- <li><a routerLinkActive="active-link" routerLink="/panel/installation-type-management">Installation Type</a></li>
+            <li><a routerLinkActive="active-link" routerLink="/panel/affected-environment-management">Affected Environment</a></li> -->
           </ul>
         </li>
       </ul>

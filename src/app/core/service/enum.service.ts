@@ -77,7 +77,7 @@ export class EnumService {
 
   getStatus(): Status[] {
     return [
-      { id: 1, enumName: StatusEnum.AWAITING_REPLY, displayName: 'Awaiting Reply' },
+      { id: 1, enumName: StatusEnum.AWAITING_REPLY, displayName: 'Awaiting' },
       { id: 2, enumName: StatusEnum.SOLVED, displayName: 'Solved' },
       { id: 3, enumName: StatusEnum.CLOSED, displayName: 'Closed' },
       { id: 4, enumName: StatusEnum.OPEN, displayName: 'Open' },

@@ -3,12 +3,12 @@
   <div class="row">
     <div class="col-sm-6">
       <div class="page-title-box">
-        <h4>Create User</h4>
+        <h4>User Profile</h4>
         <ol class="breadcrumb m-0">
           <li class="breadcrumb-item">
             <a routerLink="/panel/dashboard">Dashboard</a>
           </li>
-          <li class="breadcrumb-item active">Create User</li>
+          <li class="breadcrumb-item active">User Profile</li>
         </ol>
       </div>
     </div>
@@ -22,33 +22,24 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Create User</h4>
+          <h4 class="card-title">Update User</h4>
           <div class="row">
             <div class="col-lg-12">
               <div class="mt-4">
-                <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Submit a User Details</h5>
+                <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Update a User Details</h5>
                 <form [formGroup]="userSubmitForm" (ngSubmit)="createUser()">
                   <div class="mb-3">
-                    <label class="form-label" for="firstName">First Name<span style="color: red">*</span></label>
-                    <input [formControl]="firstNameControl" type="text" class="form-control" id="firstName" placeholder="Enter your first name" />
-                    <div class="error-msg" *ngIf="firstNameControl.touched && firstNameControl.invalid">
+                    <label class="form-label" for="lastName">Name<span style="color: red">*</span></label>
+                    <input [formControl]="userNameControl" [value]="userDetails?.name" type="text" class="form-control" id="lastName" placeholder="Enter your last name" />
+                    <div class="error-msg" *ngIf="userNameControl.touched && userNameControl.invalid">
                       <i class="fa fa-times-circle"></i>
-                      Please enter first name
-                    </div>
-                  </div>
-
-                  <div class="mb-3">
-                    <label class="form-label" for="lastName">Last Name<span style="color: red">*</span></label>
-                    <input [formControl]="lastNameControl" type="text" class="form-control" id="lastName" placeholder="Enter your last name" />
-                    <div class="error-msg" *ngIf="lastNameControl.touched && lastNameControl.invalid">
-                      <i class="fa fa-times-circle"></i>
-                      Please enter last name
+                      Please enter full name
                     </div>
                   </div>
 
                   <div class="mb-3">
                     <label class="form-label" for="emailAddress">Email<span style="color: red">*</span></label>
-                    <input [formControl]="emailAddressControl" type="email" class="form-control" id="emailAddress" placeholder="Enter your email" />
+                    <input [formControl]="emailAddressControl" [value]="userDetails?.email" type="email" class="form-control" id="emailAddress" placeholder="Enter your email" />
                     <div class="error-msg" *ngIf="emailAddressControl.touched && emailAddressControl.invalid && emailAddressControl.errors && !emailAddressControl.errors['pattern']">
                       <i class="fa fa-times-circle"></i>
                       Please enter email address
@@ -61,19 +52,51 @@
 
                   <div class="mb-3">
                     <label class="form-label" for="phoneNumber">Phone Number<span style="color: red">*</span></label>
-                    <input [formControl]="phoneNumberControl" type="text" class="form-control" id="phoneNumber" placeholder="Enter your phone number" />
+                    <input [formControl]="phoneNumberControl" [value]="userDetails?.city" type="text" class="form-control" id="phoneNumber" placeholder="Enter your phone number" />
                     <div class="error-msg" *ngIf="phoneNumberControl.touched && phoneNumberControl.invalid">
                       <i class="fa fa-times-circle"></i>
                       Please enter phone number
                     </div>
                   </div>
 
+                  <div class="mt-4">
+                    <button type="submit" class="btn btn-primary w-md" [disabled]="submitBtnClicked">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- end row -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Change Password</h4>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="mt-4">
+                <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Change User's Password</h5>
+                <form [formGroup]="changePasswordForm" (ngSubmit)="changePassword()">
+                  <div class="mb-3">
+                    <label class="form-label" for="currentPassword">Current Password<span style="color: red">*</span></label>
+                    <input [formControl]="currentPasswordControl" type="password" class="form-control" id="currentPassword" placeholder="Enter your current password" />
+                    <div class="error-msg" *ngIf="currentPasswordControl.touched && currentPasswordControl.invalid">
+                      <i class="fa fa-times-circle"></i>
+                      Please enter current password
+                    </div>
+                  </div>
+
                   <div class="mb-3">
                     <label class="form-label" for="password">Password<span style="color: red">*</span></label>
-                    <input [formControl]="passwordControl" type="password" class="form-control" id="password" placeholder="Enter your password" />
+                    <input [formControl]="passwordControl" type="password" class="form-control" id="password" placeholder="Enter your new password" />
                     <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && !confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
-                      Please enter password
+                      Please enter new password
                     </div>
                     <div class="error-msg" *ngIf="passwordControl.touched && passwordControl.invalid && confirmPasswordControl.errors && confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
@@ -83,17 +106,16 @@
 
                   <div class="mb-3">
                     <label class="form-label" for="confirmPassword">Confirm Password<span style="color: red">*</span></label>
-                    <input [formControl]="confirmPasswordControl" type="password" class="form-control" id="confirmPassword" placeholder="Enter your password again" />
+                    <input [formControl]="confirmPasswordControl" type="password" class="form-control" id="confirmPassword" placeholder="Enter your new password again" />
                     <div class="error-msg" *ngIf="confirmPasswordControl.touched && confirmPasswordControl.invalid && confirmPasswordControl.errors && !confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
-                      Please enter confirm password
+                      Please enter new confirm password
                     </div>
                     <div class="error-msg" *ngIf="confirmPasswordControl.touched && confirmPasswordControl.invalid && confirmPasswordControl.errors && confirmPasswordControl.errors['notMatch']">
                       <i class="fa fa-times-circle"></i>
                       Password not matched
                     </div>
                   </div>
-
                   <div class="mt-4">
                     <button type="submit" class="btn btn-primary w-md" [disabled]="submitBtnClicked">Submit</button>
                   </div>

@@ -38,52 +38,52 @@ export class AssignRoleComponent {
     this.getUserRoles();
   }
 
-  updateRole(userId: number) {
-    this.userRoleUpdateBtnIsDisable = true;
-    let role = this.userRoleControl.value!;
+  // updateRole(userId: number) {
+  //   this.userRoleUpdateBtnIsDisable = true;
+  //   let role = this.userRoleControl.value!;
 
-    if (role === '') {
-      this.userRoleControl.setErrors({ required: true });
-      this.userRoleControl.markAsTouched();
-      this.userRoleUpdateBtnIsDisable = false;
-      return;
-    }
+  //   if (role === '') {
+  //     this.userRoleControl.setErrors({ required: true });
+  //     this.userRoleControl.markAsTouched();
+  //     this.userRoleUpdateBtnIsDisable = false;
+  //     return;
+  //   }
 
-    this.updateRoleSubscription$ = this._userManageService.updateUserRole(userId, { role }).subscribe({
-      next: (response) => {
-        if (response.statusCode === 200) {
-          Swal.fire({
-            title: 'Success',
-            text: 'User role updated successfully!',
-            icon: 'success',
-            background: '#bcf1cd',
-            showConfirmButton: true,
-          });
-          this.changeSelectedUserType(this.selectedUserType);
-          this.userRoleUpdateBtnIsDisable = false;
-        } else {
-          Swal.fire({
-            title: 'Not updated',
-            text: 'User role could not be updated. ',
-            icon: 'error',
-            showConfirmButton: true,
-            background: '#fbdde2',
-          });
-          this.userRoleUpdateBtnIsDisable = false;
-        }
-      },
-      error: (error) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'There was an error updating the user. Please try again later.',
-          icon: 'error',
-          showConfirmButton: true,
-          background: '#fbdde2',
-        });
-        this.userRoleUpdateBtnIsDisable = false;
-      },
-    });
-  }
+  //   this.updateRoleSubscription$ = this._userManageService.updateUserRole(userId, { role }).subscribe({
+  //     next: (response) => {
+  //       if (response.statusCode === 200) {
+  //         Swal.fire({
+  //           title: 'Success',
+  //           text: 'User role updated successfully!',
+  //           icon: 'success',
+  //           background: '#bcf1cd',
+  //           showConfirmButton: true,
+  //         });
+  //         this.changeSelectedUserType(this.selectedUserType);
+  //         this.userRoleUpdateBtnIsDisable = false;
+  //       } else {
+  //         Swal.fire({
+  //           title: 'Not updated',
+  //           text: 'User role could not be updated. ',
+  //           icon: 'error',
+  //           showConfirmButton: true,
+  //           background: '#fbdde2',
+  //         });
+  //         this.userRoleUpdateBtnIsDisable = false;
+  //       }
+  //     },
+  //     error: (error) => {
+  //       Swal.fire({
+  //         title: 'Error',
+  //         text: 'There was an error updating the user. Please try again later.',
+  //         icon: 'error',
+  //         showConfirmButton: true,
+  //         background: '#fbdde2',
+  //       });
+  //       this.userRoleUpdateBtnIsDisable = false;
+  //     },
+  //   });
+  // }
 
   changeSelectedUserType = (userType: string) => {
     this.selectedUserType = userType;
@@ -104,6 +104,55 @@ export class AssignRoleComponent {
       },
     });
   }
+
+  updateUserRole = (userId: number, currentRoles: string[], clickedRole: string, isActivate: boolean) => {
+    if (!isActivate) {
+      if (!currentRoles.includes(clickedRole)) {
+        currentRoles.push(clickedRole);
+      }
+    } else {
+      const index = currentRoles.indexOf(clickedRole);
+      if (index > -1) {
+        currentRoles.splice(index, 1);
+      }
+    }
+
+    const updatedRoles = {
+      roles: currentRoles,
+    };
+    this.updateRoleSubscription$ = this._userManageService.updateUserRole(userId, updatedRoles).subscribe({
+      next: (response) => {
+        if (response.statusCode === 200) {
+          Swal.fire({
+            title: 'Success',
+            text: 'User role updated successfully!',
+            icon: 'success',
+            background: '#bcf1cd',
+            showConfirmButton: true,
+          });
+          this.changeSelectedUserType(this.selectedUserType);
+        } else {
+          Swal.fire({
+            title: 'Not updated',
+            text: 'User role could not be updated. ',
+            icon: 'error',
+            showConfirmButton: true,
+            background: '#fbdde2',
+          });
+        }
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'There was an error updating the user. Please try again later.',
+          icon: 'error',
+          showConfirmButton: true,
+          background: '#fbdde2',
+        });
+        this.userRoleUpdateBtnIsDisable = false;
+      },
+    });
+  };
 
   getUserRoles() {
     this.userRoles = this._enumService.getUserRoles();

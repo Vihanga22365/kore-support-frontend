@@ -76,6 +76,11 @@
                   </div>
 
                   <div class="mb-3">
+                    <label class="form-label" for="referenceNo">Reference Number </label>
+                    <input [formControl]="referenceNoControl" type="text" class="form-control" id="referenceNo" placeholder="Enter your reference number" />
+                  </div>
+
+                  <div class="mb-3">
                     <label class="form-label" for="description">Description <span style="color: red">*</span></label>
                     <textarea [formControl]="descriptionControl" class="form-control" name="description" id="description"></textarea>
                     <div class="error-msg" *ngIf="descriptionControl.touched && descriptionControl.invalid">

@@ -37,6 +37,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { AssignRoleComponent } from './full-portal/assign-role/assign-role.component';
 import { AssignProductGroupComponent } from './full-portal/assign-product-group/assign-product-group.component';
+import { UserProfileComponent } from './full-portal/user-profile/user-profile.component';
+import { CreateEmailGroupsComponent } from './full-portal/create-email-groups/create-email-groups.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +67,8 @@ import { AssignProductGroupComponent } from './full-portal/assign-product-group/
     ViewAffectedEnvironmentComponent,
     AssignRoleComponent,
     AssignProductGroupComponent,
+    UserProfileComponent,
+    CreateEmailGroupsComponent,
   ],
   imports: [
     CommonModule,

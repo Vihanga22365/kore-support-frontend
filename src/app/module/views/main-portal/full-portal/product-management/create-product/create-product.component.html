@@ -29,7 +29,7 @@
                 <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Submit a Product Details</h5>
                 <form [formGroup]="productSubmitForm" (ngSubmit)="createProduct()">
                   <div class="mb-3">
-                    <label class="form-label" for="Product">Product</label>
+                    <label class="form-label" for="Product">Product<span style="color: red">*</span></label>
                     <input type="text" [formControl]="productControl" class="form-control" id="product" placeholder="Enter Product" />
                     <div class="error-msg" *ngIf="productControl.touched && productControl.invalid">
                       <i class="fa fa-times-circle"></i>

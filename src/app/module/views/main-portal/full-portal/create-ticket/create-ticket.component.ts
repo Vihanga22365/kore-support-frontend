@@ -22,6 +22,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   ccEmailControl = new FormControl();
   supportRequestTypeControl = new FormControl('', Validators.required);
   subjectControl = new FormControl('', Validators.required);
+  referenceNoControl = new FormControl();
   descriptionControl = new FormControl('', Validators.required);
   severityControl = new FormControl('', Validators.required);
   productControl = new FormControl('', Validators.required);
@@ -51,6 +52,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
       ccEmailAddresses: this.ccEmailControl,
       supportRequestType: this.supportRequestTypeControl,
       subject: this.subjectControl,
+      referenceNo: this.referenceNoControl,
       description: this.descriptionControl,
       severity: this.severityControl,
       product: this.productControl,
@@ -113,6 +115,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('emailAddress', user_email!);
     formData.append('ccEmailAddresses', JSON.stringify(ccemails)); // Convert the array to a string
+    formData.append('referenceNumber', this.referenceNoControl.value!);
     formData.append('supportRequestType', this.supportRequestTypeControl.value!);
     formData.append('subject', this.subjectControl.value!);
     formData.append('description', this.descriptionControl.value!);
@@ -136,6 +139,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         if (ticketFormResponse.id) {
           this.ticketSubmitForm.reset();
           this.files = [];
+          this.ccEmailValues = [];
           this.createTicketSubmitBtnClicked = false;
           Swal.fire({
             title: 'Success',

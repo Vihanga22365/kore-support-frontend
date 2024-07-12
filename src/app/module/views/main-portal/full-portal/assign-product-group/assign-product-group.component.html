@@ -43,10 +43,14 @@
                   <a href="">{{ user.name }}</a>
                 </td>
                 <td>{{ user.email }}</td>
-                <td style="text-align: left">{{ user.role }}</td>
-                <td style="text-align: left">{{ getProductDisplayName(user.productGroup) }}</td>
-                <td align="center" style="width: 10%">
-                  <span style="display: flex; align-items: center">
+                <td style="text-align: left">
+                  <div style="margin-top: 3px" *ngFor="let role of user.roles">{{ role }}</div>
+                </td>
+                <td style="text-align: left">
+                  <div style="margin-top: 3px" *ngFor="let userProduct of user.productGroup">{{ userProduct }}</div>
+                </td>
+                <td align="center" style="width: 20%">
+                  <!-- <span style="display: flex; align-items: center">
                     <select [formControl]="userProductGroupControl" class="form-control form-select" name="userProductGroup" id="userProductGroup" style="width: max-content">
                       <option value="" selected>Select Product Group</option>
                       <option *ngFor="let product of productGroups" [value]="product.enumName">{{ product.displayName }}</option>
@@ -54,7 +58,17 @@
                     <button [disabled]="userProductGroupUpdateBtnIsDisable" (click)="updateProductGroup(user.id)" style="width: max-content; margin-left: 3px" type="button" class="btn btn-info waves-effect waves-light">
                       <i class="mdi mdi-check"></i>
                     </button>
-                  </span>
+                  </span> -->
+                  <div class="form-check form-switch form-switch-md mb-2" dir="ltr" *ngFor="let product of productList; let i = index">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      id="productSwitch{{ i + 1 }}"
+                      [checked]="user.productGroup.includes(product.name)"
+                      (click)="updateProductGroup(user.id, user.productGroup, product.name, user.productGroup.includes(product.name))"
+                    />
+                    <label class="form-check-label" for="adminSwitch">{{ product.name }} </label>
+                  </div>
                 </td>
               </tr>
             </tbody>

@@ -3,12 +3,35 @@ export interface User {
   name: string;
   password: string;
   city: string;
+  roles: string[];
 }
 
 export interface UserResponse {
   statusCode: number;
   message: string;
   ourUsers: any;
+}
+
+export interface SingleUserResponse {
+  statusCode: number;
+  message: string;
+  ourUsers: SingleUserDetailsResponse;
+}
+
+export interface SingleUserDetailsResponse {
+  id: number;
+  email: string;
+  name: string;
+  password: string;
+  city: string;
+  roles: string[];
+  productGroup: null;
+  enabled: boolean;
+  username: string;
+  authorities: any;
+  accountNonLocked: boolean;
+  credentialsNonExpired: boolean;
+  accountNonExpired: boolean;
 }
 
 export interface LogInUser {
@@ -39,8 +62,8 @@ export interface FetchUsersSubResponse {
   name: string;
   password: string;
   city: string;
-  role: string;
-  productGroup?: any;
+  roles: string[];
+  productGroup: string[];
   enabled: boolean;
   accountNonLocked: boolean;
   accountNonExpired: boolean;
@@ -54,9 +77,9 @@ export interface Authority {
 }
 
 export interface UserRoleDetails {
-  role: string;
+  roles: string[];
 }
 
 export interface UserProductGroupDetails {
-  productGroup: string;
+  productGroup: string[];
 }

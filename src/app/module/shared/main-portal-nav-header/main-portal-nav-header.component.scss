@@ -44,3 +44,11 @@ input[list="search-options"] {
 .custom-dropdown li:hover {
   background-color: #f0f0f0;
 }
+
+.subject-text {
+  white-space: nowrap; /* Prevents the text from wrapping to the next line */
+  overflow: hidden; /* Hides text that overflows the container's width */
+  text-overflow: ellipsis; /* Adds an ellipsis to indicate text overflow */
+  width: 100%; /* Adjust this width as needed */
+  display: block; /* Ensures the div behaves like a block-level element */
+}
