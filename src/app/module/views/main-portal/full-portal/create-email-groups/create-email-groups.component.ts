@@ -113,7 +113,7 @@ export class CreateEmailGroupsComponent {
         if (error.status === 409) {
           Swal.fire({
             title: 'Error',
-            text: 'Email group already exists for this user!',
+            text: 'Email group already exist in the system.',
             icon: 'error',
             showConfirmButton: true,
             background: '#fbdde2',
