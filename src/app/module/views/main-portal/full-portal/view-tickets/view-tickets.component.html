@@ -69,7 +69,10 @@
             <tbody>
               <tr *ngFor="let ticket of ticketList">
                 <td>
-                  <a routerLink="/panel/manage-ticket/{{ ticket.id }}">{{ ticket.id }}</a>
+                  <a routerLink="/panel/manage-ticket/{{ ticket.id }}"
+                    >{{ ticket.id }} <i *ngIf="ticket.slaBreach" class="mdi mdi-flag" style="font-size: 20px; color: rgb(182, 6, 6); margin-left: 15px"></i>
+                    <i *ngIf="ticket.delayedReply" class="mdi mdi-clock-alert" style="font-size: 20px; color: #cf9306; margin-left: 5px"></i
+                  ></a>
                 </td>
                 <td>{{ ticket.createdAt | date : "dd-MM-yyyy" }}</td>
                 <td>{{ getSupportTypeDisplayName(ticket.supportRequestType) }}</td>

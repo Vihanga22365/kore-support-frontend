@@ -1,6 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FetchUsersMainResponse, LogInResponse, LogInUser, SingleUserResponse, User, UserProductGroupDetails, UserResponse, UserRoleDetails } from '../model/user.model';
+import {
+  ChangePasswordResponse,
+  ChangePasswordUser,
+  FetchUsersMainResponse,
+  LogInResponse,
+  LogInUser,
+  SingleUserResponse,
+  UpadateUser,
+  UpdateUserResponse,
+  User,
+  UserProductGroupDetails,
+  UserResponse,
+  UserRoleDetails,
+} from '../model/user.model';
 import { environment } from 'src/environments/environments';
 
 @Injectable({
@@ -31,5 +44,13 @@ export class UserManageService {
 
   getUserDetails = () => {
     return this._httpClient.get<SingleUserResponse>(`${environment.MAIN_URL}/adminuser/get-profile`);
+  };
+
+  updateUserDetails = (userId: number, userDetails: UpadateUser) => {
+    return this._httpClient.put<UpdateUserResponse>(`${environment.AUTH_URL}/update/${userId}`, userDetails);
+  };
+
+  changePassword = (userId: number, passwordDetails: ChangePasswordUser) => {
+    return this._httpClient.put<ChangePasswordResponse>(`${environment.AUTH_URL}/change-password/${userId}`, passwordDetails);
   };
 }

@@ -26,7 +26,7 @@
           </ul>
         </li>
 
-        <li>
+        <li *ngIf="userRole.includes('ADMIN')">
           <a href="javascript: void(0);" class="has-arrow waves-effect">
             <i class="mdi mdi-account"></i>
             <span>User Management</span>
@@ -39,7 +39,7 @@
           </ul>
         </li>
 
-        <li>
+        <li *ngIf="userRole.includes('ADMIN')">
           <a href="javascript: void(0);" class="has-arrow waves-effect">
             <i class="mdi mdi-cog"></i>
             <span>Settings</span>

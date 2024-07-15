@@ -55,14 +55,26 @@ export class CreateProductComponent implements OnInit, OnDestroy {
         this.createProductSubmitBtnClicked = false;
       },
       error: (error) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'There was an error creating the product. Please try again.',
-          icon: 'error',
-          showConfirmButton: true,
-          background: '#fbdde2',
-        });
-        this.createProductSubmitBtnClicked = false;
+        if (error.status === 409) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Product already exists',
+            icon: 'error',
+            showConfirmButton: true,
+            background: '#fbdde2',
+          });
+          this.createProductSubmitBtnClicked = false;
+          return;
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'There was an error creating the product. Please try again.',
+            icon: 'error',
+            showConfirmButton: true,
+            background: '#fbdde2',
+          });
+          this.createProductSubmitBtnClicked = false;
+        }
       },
     });
   };

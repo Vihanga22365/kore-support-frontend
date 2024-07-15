@@ -27,7 +27,7 @@
             <div class="col-lg-12">
               <div class="mt-4">
                 <h5 class="font-size-14 mb-4"><i class="mdi mdi-arrow-right text-primary me-1"></i> Update a User Details</h5>
-                <form [formGroup]="userSubmitForm" (ngSubmit)="createUser()">
+                <form [formGroup]="userSubmitForm" (ngSubmit)="updateUser()">
                   <div class="mb-3">
                     <label class="form-label" for="lastName">Name<span style="color: red">*</span></label>
                     <input [formControl]="userNameControl" [value]="userDetails?.name" type="text" class="form-control" id="lastName" placeholder="Enter your last name" />
@@ -117,7 +117,7 @@
                     </div>
                   </div>
                   <div class="mt-4">
-                    <button type="submit" class="btn btn-primary w-md" [disabled]="submitBtnClicked">Submit</button>
+                    <button type="submit" class="btn btn-primary w-md" [disabled]="changePwdBtnClicked">Submit</button>
                   </div>
                 </form>
               </div>

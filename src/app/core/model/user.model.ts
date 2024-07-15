@@ -83,3 +83,26 @@ export interface UserRoleDetails {
 export interface UserProductGroupDetails {
   productGroup: string[];
 }
+
+export interface UpadateUser {
+  name: string;
+  email: string;
+  city: string;
+}
+
+export interface UpdateUserResponse {
+  statusCode: number;
+  message: string;
+  ourUsers: any;
+}
+
+export interface ChangePasswordUser {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordConfirmation: string;
+}
+
+export interface ChangePasswordResponse {
+  statusCode: number;
+  message: string;
+}

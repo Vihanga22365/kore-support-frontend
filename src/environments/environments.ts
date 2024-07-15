@@ -6,4 +6,5 @@ export const environment = {
   AUTH_URL: `${mainUrl}/auth`,
   AUTH_ADMIN_URL: `${mainUrl}/admin`,
   CHARTS_URL: `${mainUrl}/tickets`,
+  EMAIL_GROUPS_URL: `${mainUrl}/admin/emails`,
 };

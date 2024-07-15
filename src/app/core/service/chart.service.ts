@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environments';
-import { TicketWithWaitingTimeChartResponse, TimeSeverityChartResponse } from '../model/chart.model';
+import { DashboardDataResponse, TicketWithWaitingTimeChartResponse, TimeSeverityChartResponse } from '../model/chart.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,5 +15,9 @@ export class ChartService {
 
   getTicketsWithWaitingTime = (startDate: string, endDate: string) => {
     return this._httpClient.get<TicketWithWaitingTimeChartResponse[]>(`${environment.CHARTS_URL}/waiting-times?startMonth=${startDate}&endMonth=${endDate}`);
+  };
+
+  getDashboardData = () => {
+    return this._httpClient.get<DashboardDataResponse>(`${environment.CHARTS_URL}/user/ticketCounts`);
   };
 }

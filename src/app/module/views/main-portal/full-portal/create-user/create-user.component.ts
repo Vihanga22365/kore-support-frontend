@@ -65,25 +65,50 @@ export class CreateUserComponent {
 
     this.createUserSubscription$ = this._userService.createUser(userDetails).subscribe({
       next: (response) => {
-        Swal.fire({
-          title: 'Success',
-          text: 'User created successfully!',
-          icon: 'success',
-          background: '#bcf1cd',
-          showConfirmButton: true,
-        });
-        this.submitBtnClicked = false;
-        this.userSubmitForm.reset();
+        if (response.statusCode == 200) {
+          Swal.fire({
+            title: 'Success',
+            text: 'User created successfully!',
+            icon: 'success',
+            background: '#bcf1cd',
+            showConfirmButton: true,
+          });
+          this.submitBtnClicked = false;
+          this.userSubmitForm.reset();
+        } else if (response.statusCode == 409) {
+          Swal.fire({
+            title: 'Error',
+            text: 'User already exists!',
+            icon: 'error',
+            showConfirmButton: true,
+            background: '#fbdde2',
+          });
+          this.submitBtnClicked = false;
+          return;
+        }
       },
       error: (error) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'There was an error creating the user. Please try again later.',
-          icon: 'error',
-          showConfirmButton: true,
-          background: '#fbdde2',
-        });
-        this.submitBtnClicked = false;
+        if (error.status === 409) {
+          Swal.fire({
+            title: 'Error',
+            text: 'User already exists!',
+            icon: 'error',
+            showConfirmButton: true,
+            background: '#fbdde2',
+          });
+          this.submitBtnClicked = false;
+          return;
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: 'There was an error creating the user. Please try again later.',
+            icon: 'error',
+            showConfirmButton: true,
+            background: '#fbdde2',
+          });
+          this.submitBtnClicked = false;
+          return;
+        }
       },
     });
   };

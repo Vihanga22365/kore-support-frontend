@@ -6,7 +6,8 @@ import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import { Subscription } from 'rxjs';
 import { ChartService } from 'src/app/core/service/chart.service';
-import { TimeSeverityChartResponse } from 'src/app/core/model/chart.model';
+import { DashboardDataResponse, TimeSeverityChartResponse } from 'src/app/core/model/chart.model';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +33,8 @@ export class DashboardComponent {
   getTicketsWithSeveritySubscription$!: Subscription;
   getTicketsWithWaitingTimeSubscription$!: Subscription;
 
+  dashboardData!: DashboardDataResponse;
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private zone: NgZone, private _chartService: ChartService) {
     this.ticketsWithSeverityData = [];
   }
@@ -49,6 +52,7 @@ export class DashboardComponent {
 
     this.getTicketsWithSeverity();
     this.getTicketsWithWaitingTime();
+    this.getDashboardData();
   }
 
   // Run the function only in the browser
@@ -59,6 +63,18 @@ export class DashboardComponent {
       });
     }
   }
+
+  getDashboardData = () => {
+    this._chartService.getDashboardData().subscribe({
+      next: (response) => {
+        this.dashboardData = response;
+        console.log(this.dashboardData);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  };
 
   getTicketsWithSeverity() {
     this.getTicketsWithSeveritySubscription$ = this._chartService.getTicketsWithSeverity(this.startMonth, this.endMonth).subscribe({

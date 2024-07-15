@@ -80,12 +80,19 @@ export class TicketManageService {
     return this._httpClient.get<WaitingTimeResponse>(`${environment.TICKET_URL}/general/${ticketNumber}/clientTime/${attempt}`);
   };
 
-  getSearchTicketId = (searchResult: string) => {
-    return of(
-      Array.from({ length: 10 }, (_, i) => ({
-        ticketId: i + 1,
-        ticketNumber: `Ticket Number ${i + 20}`,
-      }))
-    );
+  getSearchTicketId = (searchUser: string, searchResult: string, searchType: string) => {
+    if (searchUser === 'admin') {
+      if (searchType === 'id') {
+        return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/general/searchByTicketId/${searchResult}`);
+      } else {
+        return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/general/searchByTicketSubject/${searchResult}`);
+      }
+    } else {
+      if (searchType === 'id') {
+        return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/searchTicketsByUser/${searchResult}`);
+      } else {
+        return this._httpClient.get<GetTicketsResponse[]>(`${environment.TICKET_URL}/searchTicketsByUserSubject/${searchResult}`);
+      }
+    }
   };
 }

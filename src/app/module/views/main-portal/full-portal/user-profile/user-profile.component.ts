@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { SingleUserDetailsResponse, SingleUserResponse, User } from 'src/app/core/model/user.model';
+import { ChangePasswordUser, SingleUserDetailsResponse, SingleUserResponse, User } from 'src/app/core/model/user.model';
 import { UserManageService } from 'src/app/core/service/user-manage.service';
 import Swal from 'sweetalert2';
 
@@ -25,7 +25,8 @@ export class UserProfileComponent {
   userSubmitForm!: FormGroup;
   changePasswordForm!: FormGroup;
 
-  createUserSubscription$!: Subscription;
+  updateUserSubscription$!: Subscription;
+  changePasswordSubscription$!: Subscription;
   getUserDetailsSubscription$!: Subscription;
 
   userDetails!: SingleUserDetailsResponse | null;
@@ -53,6 +54,9 @@ export class UserProfileComponent {
       next: (response) => {
         // console.log(response);
         this.userDetails = response.ourUsers;
+        this.userNameControl.setValue(this.userDetails.name);
+        this.emailAddressControl.setValue(this.userDetails.email);
+        this.phoneNumberControl.setValue(this.userDetails.city);
       },
       error: (error) => {
         console.log(error);
@@ -78,25 +82,34 @@ export class UserProfileComponent {
       return;
     }
 
-    const userDetails: User = {
-      email: this.emailAddressControl.value!,
-      name: this.userNameControl.value!,
-      password: this.passwordControl.value!,
-      city: this.phoneNumberControl.value!,
-      roles: [],
+    const userDetails: ChangePasswordUser = {
+      currentPassword: this.currentPasswordControl.value!,
+      newPassword: this.passwordControl.value!,
+      newPasswordConfirmation: this.confirmPasswordControl.value!,
     };
 
-    this.createUserSubscription$ = this._userService.createUser(userDetails).subscribe({
+    this.changePasswordSubscription$ = this._userService.changePassword(this.userDetails!.id, userDetails).subscribe({
       next: (response) => {
-        Swal.fire({
-          title: 'Success',
-          text: 'Password changed successfully!',
-          icon: 'success',
-          background: '#bcf1cd',
-          showConfirmButton: true,
-        });
-        this.changePwdBtnClicked = false;
-        this.changePasswordForm.reset();
+        if (response.statusCode === 200) {
+          Swal.fire({
+            title: 'Success',
+            text: 'Password changed successfully!',
+            icon: 'success',
+            background: '#bcf1cd',
+            showConfirmButton: true,
+          });
+          this.changePwdBtnClicked = false;
+          this.changePasswordForm.reset();
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.message,
+            icon: 'error',
+            showConfirmButton: true,
+            background: '#fbdde2',
+          });
+          this.changePwdBtnClicked = false;
+        }
       },
       error: (error) => {
         Swal.fire({
@@ -111,7 +124,7 @@ export class UserProfileComponent {
     });
   };
 
-  createUser = () => {
+  updateUser = () => {
     this.submitBtnClicked = true;
 
     if (this.userSubmitForm.invalid) {
@@ -122,37 +135,29 @@ export class UserProfileComponent {
       return;
     }
 
-    if (this.passwordControl.value !== this.confirmPasswordControl.value) {
-      this.passwordControl.setErrors({ notMatch: true });
-      this.confirmPasswordControl.setErrors({ notMatch: true });
-      this.submitBtnClicked = false;
-      return;
-    }
-
-    const userDetails: User = {
+    const updatedUserDetails = {
       email: this.emailAddressControl.value!,
       name: this.userNameControl.value!,
-      password: this.passwordControl.value!,
       city: this.phoneNumberControl.value!,
-      roles: [],
     };
 
-    this.createUserSubscription$ = this._userService.createUser(userDetails).subscribe({
+    this.updateUserSubscription$ = this._userService.updateUserDetails(this.userDetails!.id, updatedUserDetails).subscribe({
       next: (response) => {
-        Swal.fire({
-          title: 'Success',
-          text: 'User created successfully!',
-          icon: 'success',
-          background: '#bcf1cd',
-          showConfirmButton: true,
-        });
-        this.submitBtnClicked = false;
-        this.userSubmitForm.reset();
+        if (response.statusCode === 200) {
+          Swal.fire({
+            title: 'Success',
+            text: 'User updated successfully!',
+            icon: 'success',
+            background: '#bcf1cd',
+            showConfirmButton: true,
+          });
+          this.submitBtnClicked = false;
+        }
       },
       error: (error) => {
         Swal.fire({
           title: 'Error',
-          text: 'There was an error creating the user. Please try again later.',
+          text: 'There was an error updating the user. Please try again later.',
           icon: 'error',
           showConfirmButton: true,
           background: '#fbdde2',
@@ -163,7 +168,8 @@ export class UserProfileComponent {
   };
 
   ngOnDestroy(): void {
-    this.createUserSubscription$?.unsubscribe();
+    this.updateUserSubscription$?.unsubscribe();
+    this.changePasswordSubscription$?.unsubscribe();
     this.getUserDetailsSubscription$?.unsubscribe();
   }
 }

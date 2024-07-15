@@ -44,25 +44,27 @@
               <div class="col-sm-12 card-body">
                 <div class="mb-3">
                   <label class="form-label" for="clientStatus">Status</label>
-                  <div>
-                    <br />
-                    <span
-                      [class.open-status]="ticketDetails.clientStatus == 'OPEN'"
-                      [class.close-status]="ticketDetails.clientStatus == 'CLOSED'"
-                      [class.solve-status]="ticketDetails.clientStatus == 'SOLVED'"
-                      [class.waiting-status]="ticketDetails.clientStatus == 'AWAITING_REPLY'"
-                      *ngIf="userType == 'CLIENT'"
-                      >{{ getStatusDisplayName(ticketDetails.clientStatus) }}</span
-                    >
-                    <span
-                      [class.open-status]="ticketDetails.vendorStatus == 'OPEN'"
-                      [class.close-status]="ticketDetails.vendorStatus == 'CLOSED'"
-                      [class.solve-status]="ticketDetails.vendorStatus == 'SOLVED'"
-                      [class.waiting-status]="ticketDetails.vendorStatus == 'AWAITING_REPLY'"
-                      *ngIf="userType == 'VENDOR'"
-                      >{{ getStatusDisplayName(ticketDetails.vendorStatus) }}</span
-                    >
-                  </div>
+
+                  <br />
+                  <span
+                    [class.open-status]="ticketDetails.clientStatus == 'OPEN'"
+                    [class.close-status]="ticketDetails.clientStatus == 'CLOSED'"
+                    [class.solve-status]="ticketDetails.clientStatus == 'SOLVED'"
+                    [class.waiting-status]="ticketDetails.clientStatus == 'AWAITING_REPLY'"
+                    *ngIf="userType == 'CLIENT'"
+                    >{{ getStatusDisplayName(ticketDetails.clientStatus) }}</span
+                  >
+                  <span
+                    [class.open-status]="ticketDetails.vendorStatus == 'OPEN'"
+                    [class.close-status]="ticketDetails.vendorStatus == 'CLOSED'"
+                    [class.solve-status]="ticketDetails.vendorStatus == 'SOLVED'"
+                    [class.waiting-status]="ticketDetails.vendorStatus == 'AWAITING_REPLY'"
+                    *ngIf="userType == 'VENDOR'"
+                    >{{ getStatusDisplayName(ticketDetails.vendorStatus) }}</span
+                  >
+
+                  <i *ngIf="ticketDetails.slaBreach" class="mdi mdi-flag" style="font-size: 20px; color: rgb(182, 6, 6); margin-left: 5px"></i>
+                  <i *ngIf="ticketDetails.delayedReply" class="mdi mdi-clock-alert" style="font-size: 20px; color: #cf9306; margin-left: 5px"></i>
                 </div>
 
                 <div class="mb-3">

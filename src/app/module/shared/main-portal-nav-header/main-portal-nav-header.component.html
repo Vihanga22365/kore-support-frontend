@@ -32,11 +32,11 @@
         <div class="position-relative custom-dropdown">
           <input class="form-control" type="text" placeholder="Search" (keyup)="filterOptions($event)" [value]="searchTerm" />
           <ul *ngIf="showDropdown">
-            <li *ngFor="let option of options" (click)="selectOption(option.ticketId)">
+            <li *ngFor="let option of options" (click)="selectOption(option.id)">
               <div>
-                <b>{{ option.ticketNumber }}</b>
+                <b>No : {{ option.id }}</b>
               </div>
-              <div class="subject-text">Subject for the Ticket Subject for the Ticket Subject for the Ticket Subject for the Ticket Subject for the TicketSubject for the Ticket</div>
+              <div class="subject-text">{{ option.subject }}</div>
             </li>
           </ul>
           <span class="fa fa-search"></span>

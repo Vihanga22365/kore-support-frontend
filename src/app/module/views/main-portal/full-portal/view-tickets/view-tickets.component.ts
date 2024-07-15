@@ -228,7 +228,7 @@ export class ViewTicketsComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.log(this.severityDropDown);
+    // console.log(this.severityDropDown);
   };
 
   getAllTicketsData = (fetchType: string) => {

@@ -10,3 +10,11 @@ export interface TicketWithWaitingTimeChartResponse {
   clientWaitingTime: number;
   ticketId: string;
 }
+export interface DashboardDataResponse {
+  awaitingReplyClientStatusCount: number;
+  openVendorStatusCount: number;
+  closedSeverity1Count: number;
+  openClientStatusCount: number;
+  awaitingReplyVendorStatusCount: number;
+  openSeverity1Count: number;
+}

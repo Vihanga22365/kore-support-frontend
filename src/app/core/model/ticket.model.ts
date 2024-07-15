@@ -47,6 +47,8 @@ export interface TicketResponse {
   affectedEnvironment: string;
   platformVersion: string;
   referenceNumber: string | null;
+  slaBreach: boolean;
+  delayedReply: boolean;
 }
 
 export interface GetTicketsResponse {
@@ -66,6 +68,8 @@ export interface GetTicketsResponse {
   vendorStatus: string;
   reopenReason: string | null;
   referenceNumber: string | null;
+  slaBreach: boolean;
+  delayedReply: boolean;
 }
 
 export interface GetMessageResponse {
